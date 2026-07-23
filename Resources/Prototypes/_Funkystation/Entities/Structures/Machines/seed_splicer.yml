@@ -1,0 +1,24 @@
+﻿- type: entity
+  parent: BaseMachinePowered
+  id: SeedSplicer
+  name: seed splicer
+  description: combine seeds
+  components:
+
+  - type: Sprite
+    sprite: Structures/Machines/seed_extractor.rsi
+    snapCardinals: true
+    layers:
+    - state: seedextractor-off
+    - state: seedextractor-unlit
+      shader: unshaded
+      map: ["enum.PowerDeviceVisualLayers.Powered"]
+  - type: SeedSplicer
+    seedSlotLeft:
+      whitelist:
+        components:
+        - Seed
+    seedSlotRight:
+      whitelist:
+        components:
+        - Seed
