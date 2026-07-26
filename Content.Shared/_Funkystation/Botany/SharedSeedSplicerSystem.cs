@@ -1,7 +1,6 @@
-﻿using Content.Shared.Access.Components;
-using Content.Shared.Access.Systems;
-using Content.Shared.Containers.ItemSlots;
-using Robust.Shared.Containers;
+﻿using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Interaction;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Funkystation.Botany;
 
@@ -10,37 +9,88 @@ namespace Content.Shared._Funkystation.Botany;
 /// </summary>
 public sealed partial class SharedSeedSplicerSystem : EntitySystem
 {
-    [Dependency] private ItemSlotsSystem ItemSlotsSystem = default!;
+    [Dependency] private ItemSlotsSystem _itemSlotsSystem = null!;
+    [Dependency] private IPrototypeManager _prototypeManager = null!;
+
+    private List<SeedSplicerRecipePrototype> _splicerRecipes = null!;
+
 
     /// <inheritdoc/>
     public override void Initialize()
     {
         base.Initialize();
 
+        //Could switch to hashset for faster lookup, not enough recipes to justify right now though
+        _splicerRecipes = new List<SeedSplicerRecipePrototype>();
+        foreach (var item in _prototypeManager.EnumeratePrototypes<SeedSplicerRecipePrototype>())
+        {
+            _splicerRecipes.Add(item);
+        }
+
         SubscribeLocalEvent<SeedSplicerComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<SeedSplicerComponent, ComponentRemove>(OnComponentRemove);
 
-        //SubscribeLocalEvent<SeedSplicerComponent, EntInsertedIntoContainerMessage>(OnItemInserted);
-        //SubscribeLocalEvent<SeedSplicerComponent, EntRemovedFromContainerMessage>(OnItemRemoved);
+        //Run the splicing process
+        SubscribeLocalEvent<SeedSplicerComponent, ActivateInWorldEvent>(OnActivate);
 
     }
 
     private void OnComponentInit(EntityUid uid, SeedSplicerComponent splicer, ComponentInit args)
     {
-        ItemSlotsSystem.AddItemSlot(uid, SeedSplicerComponent.ResourceSlotId, splicer.ResourceSlot);
-        ItemSlotsSystem.AddItemSlot(uid, SeedSplicerComponent.SeedSlotLeftId, splicer.SeedSlotLeft);
-        ItemSlotsSystem.AddItemSlot(uid, SeedSplicerComponent.SeedSlotRightId, splicer.SeedSlotRight);
+        _itemSlotsSystem.AddItemSlot(uid, SeedSplicerComponent.ResourceSlotId, splicer.ResourceSlot);
+        _itemSlotsSystem.AddItemSlot(uid, SeedSplicerComponent.SeedSlotLeftId, splicer.SeedSlotLeft);
+        _itemSlotsSystem.AddItemSlot(uid, SeedSplicerComponent.SeedSlotRightId, splicer.SeedSlotRight);
 
     }
 
     private void OnComponentRemove(EntityUid uid, SeedSplicerComponent splicer, ComponentRemove args)
     {
-        ItemSlotsSystem.RemoveItemSlot(uid, splicer.ResourceSlot);
-        ItemSlotsSystem.RemoveItemSlot(uid, splicer.SeedSlotLeft);
-        ItemSlotsSystem.RemoveItemSlot(uid, splicer.SeedSlotRight);
+        _itemSlotsSystem.RemoveItemSlot(uid, splicer.ResourceSlot);
+        _itemSlotsSystem.RemoveItemSlot(uid, splicer.SeedSlotLeft);
+        _itemSlotsSystem.RemoveItemSlot(uid, splicer.SeedSlotRight);
     }
 
 
+    private void OnActivate(EntityUid uid, SeedSplicerComponent component, ActivateInWorldEvent args)
+    {
+        if (args.Handled || !args.Complex)
+            return;
 
+        if ((component.SeedSlotLeft.Item == null) || (component.SeedSlotRight.Item == null))
+            return;
+
+
+        //TODO: Terrible code until the botany refactor
+        var seedSlotLeft = component.SeedSlotLeft.Item ?? uid;
+        var seedSlotRight = component.SeedSlotRight.Item ?? uid;
+
+        FindSplicerRecipe(uid, seedSlotLeft, seedSlotRight);
+
+    }
+
+    private void FindSplicerRecipe(EntityUid splicerUid, EntityUid seedLeft, EntityUid seedRight)
+    {
+
+        EntProtoId? idLeft = MetaData(seedLeft).EntityPrototype?.ID;
+        EntProtoId? idRight = MetaData(seedRight).EntityPrototype?.ID;
+
+        foreach (var recipe in _splicerRecipes)
+        {
+            if (recipe.Seeds[0] == idLeft && recipe.Seeds[1] == idRight ||
+                recipe.Seeds[0] == idRight && recipe.Seeds[1] == idLeft)
+            {
+                ProcessRecipe(splicerUid, recipe);
+                break;
+            }
+
+        }
+    }
+
+    private void ProcessRecipe(EntityUid splicerUid, SeedSplicerRecipePrototype recipe)
+    {
+        //TODO: Fix client side spawning multiple
+        Spawn(recipe.Result, Transform(splicerUid).Coordinates);
+        Log.Debug($"Seed {recipe.ID} is generated");
+    }
 
 }

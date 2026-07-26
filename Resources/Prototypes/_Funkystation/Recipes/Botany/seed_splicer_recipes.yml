@@ -1,0 +1,6 @@
+﻿- type: seedSplicerRecipe
+  id: RecipeKillerTomato
+  seeds:
+    - MeatwheatSeeds
+    - BloodTomatoSeeds
+  result: KillerTomatoSeeds
