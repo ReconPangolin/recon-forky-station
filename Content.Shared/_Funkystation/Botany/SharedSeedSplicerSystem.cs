@@ -76,21 +76,20 @@ public sealed partial class SharedSeedSplicerSystem : EntitySystem
 
         foreach (var recipe in _splicerRecipes)
         {
-            if (recipe.Seeds[0] == idLeft && recipe.Seeds[1] == idRight ||
-                recipe.Seeds[0] == idRight && recipe.Seeds[1] == idLeft)
-            {
-                ProcessRecipe(splicerUid, recipe);
-                break;
-            }
+            if (recipe.Seeds[0] != idLeft && recipe.Seeds[0] != idRight
+                || recipe.Seeds[1] != idLeft && recipe.Seeds[1] != idRight)
+                continue;
 
+            ProcessRecipe(splicerUid, recipe, seedLeft, seedRight);
+            break;
         }
     }
 
-    private void ProcessRecipe(EntityUid splicerUid, SeedSplicerRecipePrototype recipe)
+    private void ProcessRecipe(EntityUid splicerUid, SeedSplicerRecipePrototype recipe, EntityUid seedLeft, EntityUid seedRight)
     {
-        //TODO: Fix client side spawning multiple
-        Spawn(recipe.Result, Transform(splicerUid).Coordinates);
-        Log.Debug($"Seed {recipe.ID} is generated");
+        PredictedDel(seedLeft);
+        PredictedDel(seedRight);
+        PredictedSpawnAtPosition(recipe.Result, Transform(splicerUid).Coordinates);
     }
 
 }
