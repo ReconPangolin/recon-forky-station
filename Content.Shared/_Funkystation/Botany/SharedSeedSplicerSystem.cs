@@ -7,12 +7,12 @@ namespace Content.Shared._Funkystation.Botany;
 /// <summary>
 /// This handles...
 /// </summary>
-public sealed partial class SharedSeedSplicerSystem : EntitySystem
+public abstract partial class SharedSeedSplicerSystem : EntitySystem
 {
-    [Dependency] private ItemSlotsSystem _itemSlotsSystem = null!;
-    [Dependency] private IPrototypeManager _prototypeManager = null!;
+    [Dependency] private ItemSlotsSystem _itemSlotsSystem = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
 
-    private List<SeedSplicerRecipePrototype> _splicerRecipes = null!;
+    private List<SeedSplicerRecipePrototype> _splicerRecipes = default!;
 
 
     /// <inheritdoc/>
@@ -27,6 +27,7 @@ public sealed partial class SharedSeedSplicerSystem : EntitySystem
             _splicerRecipes.Add(item);
         }
 
+
         SubscribeLocalEvent<SeedSplicerComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<SeedSplicerComponent, ComponentRemove>(OnComponentRemove);
 
@@ -35,40 +36,42 @@ public sealed partial class SharedSeedSplicerSystem : EntitySystem
 
     }
 
-    private void OnComponentInit(EntityUid uid, SeedSplicerComponent splicer, ComponentInit args)
+    private void OnComponentInit(Entity<SeedSplicerComponent> ent, ref ComponentInit args)
     {
-        _itemSlotsSystem.AddItemSlot(uid, SeedSplicerComponent.ResourceSlotId, splicer.ResourceSlot);
-        _itemSlotsSystem.AddItemSlot(uid, SeedSplicerComponent.SeedSlotLeftId, splicer.SeedSlotLeft);
-        _itemSlotsSystem.AddItemSlot(uid, SeedSplicerComponent.SeedSlotRightId, splicer.SeedSlotRight);
+        _itemSlotsSystem.AddItemSlot(ent.Owner, SeedSplicerComponent.ResourceSlotId, ent.Comp.ResourceSlot);
+        _itemSlotsSystem.AddItemSlot(ent.Owner, SeedSplicerComponent.SeedSlotLeftId, ent.Comp.SeedSlotLeft);
+        _itemSlotsSystem.AddItemSlot(ent.Owner, SeedSplicerComponent.SeedSlotRightId, ent.Comp.SeedSlotRight);
 
     }
 
-    private void OnComponentRemove(EntityUid uid, SeedSplicerComponent splicer, ComponentRemove args)
+    private void OnComponentRemove(Entity<SeedSplicerComponent> ent, ref ComponentRemove args)
     {
-        _itemSlotsSystem.RemoveItemSlot(uid, splicer.ResourceSlot);
-        _itemSlotsSystem.RemoveItemSlot(uid, splicer.SeedSlotLeft);
-        _itemSlotsSystem.RemoveItemSlot(uid, splicer.SeedSlotRight);
+        _itemSlotsSystem.RemoveItemSlot(ent.Owner, ent.Comp.ResourceSlot);
+        _itemSlotsSystem.RemoveItemSlot(ent.Owner, ent.Comp.SeedSlotLeft);
+        _itemSlotsSystem.RemoveItemSlot(ent.Owner, ent.Comp.SeedSlotRight);
     }
 
-
-    private void OnActivate(EntityUid uid, SeedSplicerComponent component, ActivateInWorldEvent args)
+    private void OnActivate(Entity<SeedSplicerComponent> ent, ref ActivateInWorldEvent args)
     {
         if (args.Handled || !args.Complex)
             return;
 
-        if ((component.SeedSlotLeft.Item == null) || (component.SeedSlotRight.Item == null))
+        UpdateBui(ent);
+
+        if (ent.Comp.SeedSlotLeft.Item == null || ent.Comp.SeedSlotRight.Item == null)
             return;
 
+        FindSplicerRecipe(ent, ent.Comp.SeedSlotLeft.Item.Value, ent.Comp.SeedSlotRight.Item.Value);
 
-        //TODO: Terrible code until the botany refactor
-        var seedSlotLeft = component.SeedSlotLeft.Item ?? uid;
-        var seedSlotRight = component.SeedSlotRight.Item ?? uid;
-
-        FindSplicerRecipe(uid, seedSlotLeft, seedSlotRight);
 
     }
 
-    private void FindSplicerRecipe(EntityUid splicerUid, EntityUid seedLeft, EntityUid seedRight)
+    protected virtual void UpdateBui(Entity<SeedSplicerComponent> seedSplicer)
+    {
+
+    }
+
+    private void FindSplicerRecipe(Entity<SeedSplicerComponent> seedSplicer, EntityUid seedLeft, EntityUid seedRight)
     {
 
         EntProtoId? idLeft = MetaData(seedLeft).EntityPrototype?.ID;
@@ -80,16 +83,26 @@ public sealed partial class SharedSeedSplicerSystem : EntitySystem
                 || recipe.Seeds[1] != idLeft && recipe.Seeds[1] != idRight)
                 continue;
 
-            ProcessRecipe(splicerUid, recipe, seedLeft, seedRight);
+            ProcessRecipe(seedSplicer, recipe, seedLeft, seedRight);
             break;
         }
     }
 
-    private void ProcessRecipe(EntityUid splicerUid, SeedSplicerRecipePrototype recipe, EntityUid seedLeft, EntityUid seedRight)
+    private void ProcessRecipe(Entity<SeedSplicerComponent> seedSplicer, SeedSplicerRecipePrototype recipe, EntityUid seedLeft, EntityUid seedRight)
     {
         PredictedDel(seedLeft);
         PredictedDel(seedRight);
-        PredictedSpawnAtPosition(recipe.Result, Transform(splicerUid).Coordinates);
+        PredictedSpawnAtPosition(recipe.Result, Transform(seedSplicer).Coordinates);
+    }
+
+    private void OnSplicerUIOpen(Entity<SeedSplicerComponent> ent, ref BoundUIOpenedEvent args)
+    {
+        UpdateSplicerUI(ent);
+    }
+
+    private void UpdateSplicerUI(Entity<SeedSplicerComponent> ent)
+    {
+
     }
 
 }

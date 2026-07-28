@@ -13,6 +13,13 @@
     - state: seedextractor-unlit
       shader: unshaded
       map: ["enum.PowerDeviceVisualLayers.Powered"]
+  - type: ActivatableUI
+    key: enum.SeedSplicerUiKey.Key
+  - type: ActivatableUIRequiresPower
+  - type: UserInterface
+    interfaces:
+      enum.SeedSplicerUiKey.Key:
+        type: SeedSplicerBoundUserInterface
   - type: SeedSplicer
     seedSlotLeft:
       whitelist:

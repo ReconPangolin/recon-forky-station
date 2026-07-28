@@ -1,5 +1,6 @@
 ﻿using Robust.Shared.GameStates;
 using Content.Shared.Containers.ItemSlots;
+using Robust.Shared.Serialization;
 
 namespace Content.Shared._Funkystation.Botany;
 
@@ -23,4 +24,10 @@ public sealed partial class SeedSplicerComponent : Component
 
     [DataField]
     public ItemSlot ResourceSlot = new();
+}
+
+[Serializable, NetSerializable]
+public enum SeedSplicerUiKey : byte
+{
+    Key
 }
