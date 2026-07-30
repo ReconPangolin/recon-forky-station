@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Content.Shared._Funkystation.Botany;
+using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 
 namespace Content.Client._Funkystation.Botany;
@@ -20,6 +21,14 @@ public sealed partial class SeedSplicerBoundUserInterface: BoundUserInterface
     {
         base.Open();
         _splicerWindow = this.CreateWindow<SeedSplicerMenu>();
+    }
+
+    public void Update(Entity<SeedSplicerComponent> ent)
+    {
+        if (_splicerWindow == null)
+            return;
+
+        _splicerWindow.Update(ent);
     }
 }
 

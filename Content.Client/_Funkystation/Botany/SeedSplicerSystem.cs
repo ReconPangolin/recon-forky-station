@@ -14,7 +14,7 @@ public sealed partial class SeedSplicerSystem : SharedSeedSplicerSystem
     {
         if (_ui.TryGetOpenUi<SeedSplicerBoundUserInterface>(seedSplicer.Owner, SeedSplicerUiKey.Key, out var bui))
         {
-
+            bui.Update(seedSplicer);
         }
 
     }

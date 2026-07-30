@@ -4,4 +4,14 @@
     Title="{Loc 'seed-splicer-menu-title'}"
     MinSize="700 350"
     SetSize="980 550">
+
+    <BoxContainer
+        Name="SeedPacketContainer"
+        Margin="0 0 0 5"
+        Orientation="Horizontal">
+        <SpriteView OverrideDirection="South" Scale="2 2" Name="SeedSpriteLeft" Access="Public" SetSize="64 64" />
+        <SpriteView OverrideDirection="South" Scale="2 2" Name="SeedSpriteRight" Access="Public" SetSize="64 64" />
+    </BoxContainer>
+
 </controls:FancyWindow>
+
