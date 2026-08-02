@@ -27,6 +27,24 @@ public sealed partial class SeedSplicerComponent : Component
 }
 
 [Serializable, NetSerializable]
+public enum SeedSplicerSlot : byte
+{
+    LeftSeed,
+    RightSeed,
+    Resource,
+    Gene,
+}
+
+[Serializable, NetSerializable]
+public sealed class SeedSplicerEjectMessage(SeedSplicerSlot slotToEject) : BoundUserInterfaceMessage
+{
+    public SeedSplicerSlot SlotToEject = slotToEject;
+}
+
+[Serializable, NetSerializable]
+public sealed class SeedSplicerActivateMessage : BoundUserInterfaceMessage;
+
+[Serializable, NetSerializable]
 public enum SeedSplicerUiKey : byte
 {
     Key

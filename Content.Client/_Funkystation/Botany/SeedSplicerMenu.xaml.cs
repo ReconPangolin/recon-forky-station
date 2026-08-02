@@ -17,9 +17,26 @@ public sealed partial class SeedSplicerMenu : FancyWindow
     public void Update(Entity<SeedSplicerComponent> ent)
     {
         if (ent.Comp.SeedSlotLeft.Item != null)
+        {
             SeedSpriteLeft.SetEntity(ent.Comp.SeedSlotLeft.Item);
+            SeedLabelLeft.Text = ent.Comp.SeedSlotLeft.ID;
+        }
+        else
+        {
+            SeedSpriteLeft.SetEntity(null);
+            SeedLabelLeft.Text = "no seed loaded";
+        }
+
         if (ent.Comp.SeedSlotRight.Item != null)
+        {
             SeedSpriteRight.SetEntity(ent.Comp.SeedSlotRight.Item);
+            SeedLabelRight.Text = ent.Comp.SeedSlotRight.ID;
+        }
+        else
+        {
+            SeedSpriteRight.SetEntity(null);
+            SeedLabelRight.Text = "no seed loaded";
+        }
     }
 
 }
