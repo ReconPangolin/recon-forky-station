@@ -4,22 +4,17 @@ using Robust.Client.UserInterface;
 namespace Content.Client._Funkystation.Botany;
 
 [UsedImplicitly]
-public sealed partial class SeedSplicerBoundUserInterface: BoundUserInterface
+public sealed partial class SeedSplicerBoundUserInterface(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
 {
     [ViewVariables]
     private SeedSplicerMenu? _splicerWindow;
-
-    public SeedSplicerBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
-    {
-
-    }
-
 
 
     protected override void Open()
     {
         base.Open();
         _splicerWindow = this.CreateWindow<SeedSplicerMenu>();
+        _splicerWindow.SetEntity(Owner);
 
         _splicerWindow.EjectButtonLeft.OnPressed += _ =>
         {
@@ -37,12 +32,12 @@ public sealed partial class SeedSplicerBoundUserInterface: BoundUserInterface
         };
     }
 
-    public void Update(Entity<SeedSplicerComponent> ent)
+    public void UpdateUi()
     {
         if (_splicerWindow == null)
             return;
 
-        _splicerWindow.Update(ent);
+        _splicerWindow.UpdateUi();
     }
 }
 

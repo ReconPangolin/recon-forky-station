@@ -12,6 +12,7 @@ public sealed partial class SeedSplicerRecipePrototype : IPrototype
     [IdDataField]
     public string ID { get; private set; } = default!;
 
+    //I could have two separate fields for clarity
     [DataField]
     public List<EntProtoId?> Seeds = new();
 

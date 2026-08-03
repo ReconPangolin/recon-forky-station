@@ -4,9 +4,6 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared._Funkystation.Botany;
 
-/// <summary>
-/// This is used for...
-/// </summary>
 [RegisterComponent, NetworkedComponent]
 public sealed partial class SeedSplicerComponent : Component
 {
@@ -26,6 +23,7 @@ public sealed partial class SeedSplicerComponent : Component
     public ItemSlot ResourceSlot = new();
 }
 
+// Used for SeedSplicerEjectMessage to tell the server what slot to eject
 [Serializable, NetSerializable]
 public enum SeedSplicerSlot : byte
 {
@@ -35,12 +33,14 @@ public enum SeedSplicerSlot : byte
     Gene,
 }
 
+// UI call to eject an item so the user can avoid the context menu
 [Serializable, NetSerializable]
 public sealed class SeedSplicerEjectMessage(SeedSplicerSlot slotToEject) : BoundUserInterfaceMessage
 {
     public SeedSplicerSlot SlotToEject = slotToEject;
 }
 
+// UI call to combine two seeds together
 [Serializable, NetSerializable]
 public sealed class SeedSplicerActivateMessage : BoundUserInterfaceMessage;
 

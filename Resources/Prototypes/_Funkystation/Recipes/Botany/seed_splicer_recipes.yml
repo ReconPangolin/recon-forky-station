@@ -4,3 +4,9 @@
     - MeatwheatSeeds
     - BloodTomatoSeeds
   result: KillerTomatoSeeds
+
+- type: seedSplicerRecipe
+  id: RecipeBugged
+  seeds:
+  - MeatwheatSeeds
+  result: KillerTomatoSeeds

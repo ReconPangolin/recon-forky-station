@@ -9,17 +9,30 @@ namespace Content.Client._Funkystation.Botany;
 [GenerateTypedNameReferences]
 public sealed partial class SeedSplicerMenu : FancyWindow
 {
+    [Dependency] private IEntityManager _entityManager = default!;
+    private EntityUid _owner;
+
     public SeedSplicerMenu()
     {
         RobustXamlLoader.Load(this);
     }
 
-    public void Update(Entity<SeedSplicerComponent> ent)
+    public void SetEntity(EntityUid owner)
     {
-        if (ent.Comp.SeedSlotLeft.Item != null)
+        _owner = owner;
+        UpdateUi();
+    }
+
+    public void UpdateUi()
+    {
+        if (!_entityManager.TryGetComponent<SeedSplicerComponent>(_owner, out var seedSplicer))
+            return;
+
+        //TODO: Botany refactor: Use actual seed names
+        if (seedSplicer.SeedSlotLeft.Item != null)
         {
-            SeedSpriteLeft.SetEntity(ent.Comp.SeedSlotLeft.Item);
-            SeedLabelLeft.Text = ent.Comp.SeedSlotLeft.ID;
+            SeedSpriteLeft.SetEntity(seedSplicer.SeedSlotLeft.Item);
+            SeedLabelLeft.Text = seedSplicer.SeedSlotLeft.ID;
         }
         else
         {
@@ -27,10 +40,10 @@ public sealed partial class SeedSplicerMenu : FancyWindow
             SeedLabelLeft.Text = "no seed loaded";
         }
 
-        if (ent.Comp.SeedSlotRight.Item != null)
+        if (seedSplicer.SeedSlotRight.Item != null)
         {
-            SeedSpriteRight.SetEntity(ent.Comp.SeedSlotRight.Item);
-            SeedLabelRight.Text = ent.Comp.SeedSlotRight.ID;
+            SeedSpriteRight.SetEntity(seedSplicer.SeedSlotRight.Item);
+            SeedLabelRight.Text = seedSplicer.SeedSlotRight.ID;
         }
         else
         {

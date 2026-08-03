@@ -1,17 +1,19 @@
 ﻿using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Interaction;
+using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Funkystation.Botany;
 
 /// <summary>
-/// This handles...
+/// Used to combine seeds together to create new hybrid plant species
 /// </summary>
 public abstract partial class SharedSeedSplicerSystem : EntitySystem
 {
     [Dependency] private ItemSlotsSystem _itemSlotsSystem = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
 
+    //Could switch to hashset for faster lookup or enumerate each query, leaving as a list for now
     private List<SeedSplicerRecipePrototype> _splicerRecipes = default!;
 
 
@@ -20,24 +22,27 @@ public abstract partial class SharedSeedSplicerSystem : EntitySystem
     {
         base.Initialize();
 
-        //Could switch to hashset for faster lookup, not enough recipes to justify right now though
         _splicerRecipes = new List<SeedSplicerRecipePrototype>();
         foreach (var item in _prototypeManager.EnumeratePrototypes<SeedSplicerRecipePrototype>())
         {
-            _splicerRecipes.Add(item);
+            //Only add valid recipes
+            if (item.Seeds.Count == 2)
+                _splicerRecipes.Add(item);
         }
 
-        SubscribeLocalEvent<SeedSplicerComponent, BoundUIOpenedEvent>(OnBuiOpened);
 
+        //Add and remove the item slots
         SubscribeLocalEvent<SeedSplicerComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<SeedSplicerComponent, ComponentRemove>(OnComponentRemove);
 
-        //Run the splicing process
+        //Handle UI messages
         SubscribeLocalEvent<SeedSplicerComponent, SeedSplicerActivateMessage>(OnActivate);
-
         SubscribeLocalEvent<SeedSplicerComponent, SeedSplicerEjectMessage>(OnEjectPressed);
 
-        //TODO: Event after the item was ejected manually
+        //Update the UI if it's opened or item slots are changed
+        SubscribeLocalEvent((Entity<SeedSplicerComponent> ent, ref BoundUIOpenedEvent _)  => UpdateBui(ent));
+        SubscribeLocalEvent((Entity<SeedSplicerComponent> ent, ref EntRemovedFromContainerMessage _)  => UpdateBui(ent));
+        SubscribeLocalEvent((Entity<SeedSplicerComponent> ent, ref EntInsertedIntoContainerMessage _)  => UpdateBui(ent));
     }
 
     private void OnEjectPressed(Entity<SeedSplicerComponent> ent, ref SeedSplicerEjectMessage args)
@@ -51,7 +56,6 @@ public abstract partial class SharedSeedSplicerSystem : EntitySystem
                 _itemSlotsSystem.TryEjectToHands(ent.Owner, ent.Comp.SeedSlotRight, args.Actor);
                 break;
         }
-        Dirty(ent, ent.Comp);
         UpdateBui(ent);
     }
 
@@ -75,12 +79,12 @@ public abstract partial class SharedSeedSplicerSystem : EntitySystem
         if (ent.Comp.SeedSlotLeft.Item == null || ent.Comp.SeedSlotRight.Item == null)
             return;
 
-        FindSplicerRecipe(ent, ent.Comp.SeedSlotLeft.Item.Value, ent.Comp.SeedSlotRight.Item.Value);
-    }
+        var recipe = FindSplicerRecipe(ent, ent.Comp.SeedSlotLeft.Item.Value, ent.Comp.SeedSlotRight.Item.Value);
 
-    private void OnBuiOpened(Entity<SeedSplicerComponent> ent, ref BoundUIOpenedEvent args)
-    {
-        UpdateBui(ent);
+        if (recipe == null)
+            return;
+
+        ProcessRecipe(ent, recipe, ent.Comp.SeedSlotLeft.Item.Value, ent.Comp.SeedSlotRight.Item.Value);
     }
 
     protected virtual void UpdateBui(Entity<SeedSplicerComponent> ent)
@@ -88,9 +92,9 @@ public abstract partial class SharedSeedSplicerSystem : EntitySystem
 
     }
 
-    private void FindSplicerRecipe(Entity<SeedSplicerComponent> ent, EntityUid seedLeft, EntityUid seedRight)
+    //Returns a recipe if all prototypes in that recipe are within an item slot, otherwise returns null
+    private SeedSplicerRecipePrototype? FindSplicerRecipe(Entity<SeedSplicerComponent> ent, EntityUid seedLeft, EntityUid seedRight)
     {
-
         EntProtoId? idLeft = MetaData(seedLeft).EntityPrototype?.ID;
         EntProtoId? idRight = MetaData(seedRight).EntityPrototype?.ID;
 
@@ -99,14 +103,16 @@ public abstract partial class SharedSeedSplicerSystem : EntitySystem
             if (recipe.Seeds[0] != idLeft && recipe.Seeds[0] != idRight
                 || recipe.Seeds[1] != idLeft && recipe.Seeds[1] != idRight)
                 continue;
-
-            ProcessRecipe(ent, recipe, seedLeft, seedRight);
-            break;
+            return recipe;
         }
+
+        return null;
     }
 
+    //Deletes all ingredients that were used in a recipe then spawns the product
     private void ProcessRecipe(Entity<SeedSplicerComponent> ent, SeedSplicerRecipePrototype recipe, EntityUid seedLeft, EntityUid seedRight)
     {
+        //Recipes require at least two seeds so they are always deleted
         PredictedDel(seedLeft);
         PredictedDel(seedRight);
         PredictedSpawnAtPosition(recipe.Result, Transform(ent).Coordinates);

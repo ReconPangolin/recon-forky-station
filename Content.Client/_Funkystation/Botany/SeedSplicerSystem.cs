@@ -4,7 +4,7 @@ using Robust.Client.GameObjects;
 namespace Content.Client._Funkystation.Botany;
 
 /// <summary>
-/// This handles...
+/// Client implementation of the seed splicer updates the UI
 /// </summary>
 public sealed partial class SeedSplicerSystem : SharedSeedSplicerSystem
 {
@@ -14,7 +14,7 @@ public sealed partial class SeedSplicerSystem : SharedSeedSplicerSystem
     {
         if (_ui.TryGetOpenUi<SeedSplicerBoundUserInterface>(seedSplicer.Owner, SeedSplicerUiKey.Key, out var bui))
         {
-            bui.Update(seedSplicer);
+            bui.UpdateUi();
         }
 
     }
