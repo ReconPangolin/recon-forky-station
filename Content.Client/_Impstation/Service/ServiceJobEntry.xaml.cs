@@ -13,10 +13,11 @@ namespace Content.Client._Impstation.Service;
 public sealed partial class ServiceJobEntry : BoxContainer
 {
     private bool _selected;
+
+    //Funky - Added a countdown to the job board UI
     private string _timer;
 
     public Action? OnSelectButtonPressed;
-
 
     public ServiceJobEntry(ServiceJobPrototype job, IEntityManager entMan)
     {
@@ -24,8 +25,11 @@ public sealed partial class ServiceJobEntry : BoxContainer
 
         NameLabel.SetMarkup(Loc.GetString(job.Name));
         DescriptionLabel.SetMarkup(Loc.GetString(job.Description));
+
+        //Funky begin - Added a countdown to the job board UI
         _timer = job.Timer.ToString();
         TimerLabel.SetMarkup(Loc.GetString("service-job-console-timer-label", ("timer", _timer)));
+        //Funky end - Added a countdown to the job board UI
 
         if (job.Sprite != null)
         {
@@ -63,6 +67,7 @@ public sealed partial class ServiceJobEntry : BoxContainer
         }
     }
 
+    //Funky - Added a countdown to the job board UI
     public string Timer
     {
         get => _timer;

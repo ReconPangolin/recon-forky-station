@@ -33,8 +33,10 @@ public sealed partial class ServiceJobBoardMenu : FancyWindow
             entry.Disabled = state.ActiveJob != null;
             entry.Selected = state.ActiveJob == job;
 
+            //Funky begin - Added a countdown to the job board UI
             if (entry.Selected && state.EndTime != null && state.CurTime != null)
                 entry.Timer = (state.EndTime.Value - state.CurTime.Value).ToString(@"hh\:mm\:ss");
+            //Funky end - Added a countdown to the job board UI
 
             CurrentJobContainer.AddChild(entry);
         }

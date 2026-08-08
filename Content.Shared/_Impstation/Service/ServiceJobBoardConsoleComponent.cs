@@ -24,6 +24,7 @@ public sealed class ServiceJobBoardConsoleState : BoundUserInterfaceState
     public List<ProtoId<ServiceJobPrototype>> AvailableJobs;
     public ProtoId<ServiceJobPrototype>? ActiveJob;
     public TimeSpan? EndTime;
+    //Funky begin - Adding a countdown to the jobs end
     public TimeSpan? CurTime;
 
     public ServiceJobBoardConsoleState(List<ProtoId<ServiceJobPrototype>> availableJobs,
@@ -36,6 +37,7 @@ public sealed class ServiceJobBoardConsoleState : BoundUserInterfaceState
         EndTime = endTime;
         CurTime = curTime;
     }
+    //Funky end - Adding a countdown to the jobs end
 }
 
 [Serializable, NetSerializable]

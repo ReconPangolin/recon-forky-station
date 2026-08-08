@@ -8,18 +8,18 @@
     layers:
     - map: ["computerLayerBody"]
       state: computer
-      sprite: Structures/Machines/computers.rsi
+      sprite: Structures/Machines/computers.rsi #Funky - sprite change
     - map: ["computerLayerKeyboard"]
       state: generic_keyboard
-      sprite: Structures/Machines/computers.rsi
+      sprite: Structures/Machines/computers.rsi #Funky - sprite change
     - map: ["computerLayerScreen"]
       state: telesci # TODO: Change to servicecomputer once funky computer sprites are added
-      sprite: Structures/Machines/computers.rsi
+      sprite: Structures/Machines/computers.rsi #Funky - sprite change
     - map: ["computerLayerKeys"]
       state: generic_keys
     - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
       state: generic_panel_open
-      sprite: Structures/Machines/computers.rsi
+      sprite: Structures/Machines/computers.rsi #Funky - sprite change
   - type: ServiceJobBoardConsole
   - type: ActivatableUI
     key: enum.ServiceJobBoardUiKey.Key
@@ -38,6 +38,7 @@
     energy: 1.6
     color: "#b89f25"
 
+#Funky - No tabletop computer
 #- type: entity
 #  parent: [BaseStructureComputerTabletop, ComputerServiceJobBoard]
 #  id: ComputerTabletopServiceJobBoard
@@ -61,6 +62,7 @@
 #      sprite: _Impstation/Structures/Machines/computers.rsi
 
 - type: entity
+  #Funky - Civilian instead of service contraband
   parent: [ BaseComputerCircuitboard, BaseCivilianContraband ]
   id: ServiceJobBoardComputerCircuitboard
   name: service job board computer board

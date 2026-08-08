@@ -1,5 +1,5 @@
+//Funky begin - Announcement system is EE, different dependencies for forky also deprecated readonly will be removed in the future
 using System.Linq;
-using Content.Server.Chat.Systems;
 using Content.Server.Radio.EntitySystems;
 using Content.Server.Station.Systems;
 using Content.Shared._Impstation.Service;
@@ -7,6 +7,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Server.Chat.Systems;
 
 namespace Content.Server._Impstation.Service;
 
@@ -23,8 +24,8 @@ public sealed partial class ServiceJobBoardSystem : EntitySystem
     [Dependency] private RadioSystem _radio = default!;
     [Dependency] private StationSystem _station = default!;
     [Dependency] private UserInterfaceSystem _ui = default!;
-
     [Dependency] private ChatSystem _chatSystem = default!;
+    //Funky end - Announcement system is EE, different dependencies for forky
 
     private static readonly string AnnouncementName = "Station Event";
     private static readonly Color AnnouncementColor = Color.FromHex("#88BE14");
@@ -43,6 +44,7 @@ public sealed partial class ServiceJobBoardSystem : EntitySystem
     {
         var query = EntityQueryEnumerator<ServiceJobsDataComponent>();
         var curTime = _timing.CurTime;
+        //Funky begin - Announcement system is EE, adding a way for the board to reset
         while (query.MoveNext(out var uid, out var data))
         {
             var job = _prototypeManager.Index(data.ActiveJob);
@@ -66,6 +68,8 @@ public sealed partial class ServiceJobBoardSystem : EntitySystem
 
         GetJobs(ent);
     }
+    //Funky end - Announcement system is EE, adding a way for the board to reset
+
 
     private void OnBUIOpened(Entity<ServiceJobBoardConsoleComponent> ent, ref BoundUIOpenedEvent args)
     {
@@ -88,6 +92,7 @@ public sealed partial class ServiceJobBoardSystem : EntitySystem
         if (!_prototypeManager.TryIndex<ServiceJobPrototype>(args.JobId, out var job))
             return;
 
+        //Funky - Fixing warning
         if (!jobData.StationJobs.Contains(job))
             return;
 
@@ -113,6 +118,7 @@ public sealed partial class ServiceJobBoardSystem : EntitySystem
 
     private void UpdateUi(Entity<ServiceJobBoardConsoleComponent> ent, Entity<ServiceJobsDataComponent> stationEnt)
     {
+        //Funky - Added a countdown to the jobs end
         var state = new ServiceJobBoardConsoleState(
             GetJobs(stationEnt),
             stationEnt.Comp.ActiveJob,
@@ -132,11 +138,13 @@ public sealed partial class ServiceJobBoardSystem : EntitySystem
         {
             ent.Comp.StationJobs = [];
 
+            //Funky begin - Fixing warning
             for (var i = 0; i < ent.Comp.MaxJobs; i++)
             {
                 if (TryGetRandomJob(ent, out var job) && job != null)
                     ent.Comp.StationJobs.Add(job);
             }
+            //Funky end - Fixing warning
 
         }
         return ent.Comp.StationJobs;

@@ -4,7 +4,7 @@
   description: service-job-ballroom-dance-description
   startAnnounce: service-job-ballroom-dance-start
   sprite:
-    sprite: Clothing/Shoes/Boots/laceups.rsi
+    sprite: Clothing/Shoes/Boots/laceups.rsi #Funky - No heel sprite
     state: icon
 
 - type: serviceJob
@@ -13,7 +13,7 @@
   description: service-job-training-workshop-description
   startAnnounce: service-job-training-workshop-start
   sprite:
-    sprite: _Funkystation/Objects/Tools/wrench.rsi
+    sprite: _Funkystation/Objects/Tools/wrench.rsi #Funky - No great wrench sprite
     state: icon
 
 - type: serviceJob
@@ -31,7 +31,7 @@
   description: service-job-renaissance-fair-description
   startAnnounce: service-job-renaissance-fair-start
   sprite:
-    sprite: Clothing/Head/Helmets/templar.rsi
+    sprite: Clothing/Head/Helmets/templar.rsi #Funky - No goblin knight sprite
     state: icon
 
 - type: serviceJob
@@ -40,7 +40,7 @@
   description: service-job-feast-description
   startAnnounce: service-job-feast-start
   sprite:
-    sprite: Objects/Consumable/Food/bowl.rsi
+    sprite: Objects/Consumable/Food/bowl.rsi #Funky - No toddlerringstew sprite
     state: bowl
     layers:
     - state: bowl
@@ -97,7 +97,7 @@
   description: service-job-eating-contest-description
   startAnnounce: service-job-eating-contest-start
   sprite:
-    sprite: Objects/Consumable/Food/burger.rsi
+    sprite: Objects/Consumable/Food/burger.rsi # Funky - No eatsign sprite
     state: superbite
 
 - type: serviceJob
@@ -115,7 +115,7 @@
   description: service-job-race-description
   startAnnounce: service-job-race-start
   sprite:
-    sprite: Clothing/Shoes/Specific/skates.rsi
+    sprite: Clothing/Shoes/Specific/skates.rsi # Funky - No littlecar sprite
     state: icon
 
 - type: serviceJob
@@ -161,7 +161,7 @@
   startAnnounce: service-job-yoga-class-start
   sprite:
     sprite: Structures/Furniture/Carpets/blue_carpet.rsi
-    state: full
+    state: full # Funky - No full_blue sprite
 
 - type: serviceJob
   id: ServiceJobTournament
@@ -187,5 +187,5 @@
   description: service-job-unforgettable-luncheon-description
   startAnnounce: service-job-unforgettable-luncheon-start
   sprite:
-    sprite: Objects/Consumable/Food/Baked/misc.rsi
+    sprite: Objects/Consumable/Food/Baked/misc.rsi #Funky - No lunchbox sprite
     state: grilled-cheese
