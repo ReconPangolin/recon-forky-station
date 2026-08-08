@@ -1,7 +1,7 @@
 - type: entity
   parent: BaseComputerAiAccess
   id: ComputerServiceJobBoard
-  name: service job board
+  name: service event console # Funky - Renamed job board
   description: Console for assigning stationwide events to the Service department.
   components:
   - type: Sprite
@@ -65,7 +65,7 @@
   #Funky - Civilian instead of service contraband
   parent: [ BaseComputerCircuitboard, BaseCivilianContraband ]
   id: ServiceJobBoardComputerCircuitboard
-  name: service job board computer board
+  name: service event console computer board # Funky - Renamed job board
   description: A computer printed circuit board for a service job board computer.
   components:
   - type: Sprite
