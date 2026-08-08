@@ -8,18 +8,18 @@
     layers:
     - map: ["computerLayerBody"]
       state: computer
-      sprite: _Impstation/Structures/Machines/computers.rsi
+      sprite: Structures/Machines/computers.rsi
     - map: ["computerLayerKeyboard"]
       state: generic_keyboard
-      sprite: _Impstation/Structures/Machines/computers.rsi
+      sprite: Structures/Machines/computers.rsi
     - map: ["computerLayerScreen"]
-      state: servicejob
-      sprite: _Impstation/Structures/Machines/computers.rsi
+      state: telesci # TODO: Change to servicecomputer once funky computer sprites are added
+      sprite: Structures/Machines/computers.rsi
     - map: ["computerLayerKeys"]
       state: generic_keys
     - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
       state: generic_panel_open
-      sprite: _Impstation/Structures/Machines/computers.rsi
+      sprite: Structures/Machines/computers.rsi
   - type: ServiceJobBoardConsole
   - type: ActivatableUI
     key: enum.ServiceJobBoardUiKey.Key
@@ -38,30 +38,30 @@
     energy: 1.6
     color: "#b89f25"
 
-- type: entity
-  parent: [BaseStructureComputerTabletop, ComputerServiceJobBoard]
-  id: ComputerTabletopServiceJobBoard
-  components:
-  - type: Sprite
-    drawdepth: SmallObjects
-    layers:
-    - map: ["computerLayerBody"]
-      sprite: _Impstation/Structures/Machines/computer_tabletop.rsi
-      state: computer_tabletop
-    - map: ["computerLayerKeyboard"]
-      sprite: _Impstation/Structures/Machines/computer_tabletop.rsi
-      state: generic_keyboard_tabletop
-    - map: ["computerLayerScreen"]
-      state: servicejob
-      sprite: _Impstation/Structures/Machines/computers.rsi
-    - map: ["computerLayerKeys"]
-      state: generic_keys
-    - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
-      state: generic_panel_open
-      sprite: _Impstation/Structures/Machines/computers.rsi
+#- type: entity
+#  parent: [BaseStructureComputerTabletop, ComputerServiceJobBoard]
+#  id: ComputerTabletopServiceJobBoard
+#  components:
+#  - type: Sprite
+#    drawdepth: SmallObjects
+#    layers:
+#    - map: ["computerLayerBody"]
+#      sprite: _Impstation/Structures/Machines/computer_tabletop.rsi
+#      state: computer_tabletop
+#    - map: ["computerLayerKeyboard"]
+#      sprite: _Impstation/Structures/Machines/computer_tabletop.rsi
+#      state: generic_keyboard_tabletop
+#    - map: ["computerLayerScreen"]
+#      state: servicejob
+#      sprite: _Impstation/Structures/Machines/computers.rsi
+#    - map: ["computerLayerKeys"]
+#      state: generic_keys
+#    - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
+#      state: generic_panel_open
+#      sprite: _Impstation/Structures/Machines/computers.rsi
 
 - type: entity
-  parent: [ BaseComputerCircuitboard, BaseServiceContraband ]
+  parent: [ BaseComputerCircuitboard, BaseCivilianContraband ]
   id: ServiceJobBoardComputerCircuitboard
   name: service job board computer board
   description: A computer printed circuit board for a service job board computer.

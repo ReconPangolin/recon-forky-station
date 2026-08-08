@@ -13,7 +13,10 @@ namespace Content.Client._Impstation.Service;
 public sealed partial class ServiceJobEntry : BoxContainer
 {
     private bool _selected;
+    private string _timer;
+
     public Action? OnSelectButtonPressed;
+
 
     public ServiceJobEntry(ServiceJobPrototype job, IEntityManager entMan)
     {
@@ -21,7 +24,8 @@ public sealed partial class ServiceJobEntry : BoxContainer
 
         NameLabel.SetMarkup(Loc.GetString(job.Name));
         DescriptionLabel.SetMarkup(Loc.GetString(job.Description));
-        TimerLabel.SetMarkup(Loc.GetString("service-job-console-timer-label", ("timer", job.Timer.ToString())));
+        _timer = job.Timer.ToString();
+        TimerLabel.SetMarkup(Loc.GetString("service-job-console-timer-label", ("timer", _timer)));
 
         if (job.Sprite != null)
         {
@@ -56,6 +60,16 @@ public sealed partial class ServiceJobEntry : BoxContainer
                 SelectButton.AddStyleClass(StyleClass.Negative);
                 SelectButton.Text = Loc.GetString("service-job-console-select-button-text-claimed");
             }
+        }
+    }
+
+    public string Timer
+    {
+        get => _timer;
+        set
+        {
+            _timer = value;
+            TimerLabel.SetMarkup(Loc.GetString("service-job-console-timer-label", ("timer", _timer)));
         }
     }
 }

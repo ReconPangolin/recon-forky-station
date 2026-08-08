@@ -1,11 +1,9 @@
 using System.Linq;
-using Content.Server.Announcements.Systems;
-using Content.Server.Database;
+using Content.Server.Chat.Systems;
 using Content.Server.Radio.EntitySystems;
 using Content.Server.Station.Systems;
 using Content.Shared._Impstation.Service;
 using Robust.Server.GameObjects;
-using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
@@ -17,17 +15,17 @@ namespace Content.Server._Impstation.Service;
 ///     TLDR: Console handles UI interactions,
 ///     all the actual data is stored by the station.
 /// </summary>
-public sealed class ServiceJobBoardSystem : EntitySystem
+public sealed partial class ServiceJobBoardSystem : EntitySystem
 {
-    [Dependency] private readonly AnnouncerSystem _announcer = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly RadioSystem _radio = default!;
-    [Dependency] private readonly StationSystem _station = default!;
-    [Dependency] private readonly UserInterfaceSystem _ui = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private RadioSystem _radio = default!;
+    [Dependency] private StationSystem _station = default!;
+    [Dependency] private UserInterfaceSystem _ui = default!;
 
-    private static readonly string AnnouncementId = "commandReport";
+    [Dependency] private ChatSystem _chatSystem = default!;
+
     private static readonly string AnnouncementName = "Station Event";
     private static readonly Color AnnouncementColor = Color.FromHex("#88BE14");
 
@@ -45,24 +43,28 @@ public sealed class ServiceJobBoardSystem : EntitySystem
     {
         var query = EntityQueryEnumerator<ServiceJobsDataComponent>();
         var curTime = _timing.CurTime;
-
-        while (query.MoveNext(out _, out var data))
+        while (query.MoveNext(out var uid, out var data))
         {
             var job = _prototypeManager.Index(data.ActiveJob);
             if (data.EndTime != null &&
                 job != null &&
                 data.EndTime.Value < curTime)
             {
-                _announcer.SendAnnouncement(
-                    _announcer.GetAnnouncementId(AnnouncementId),
-                    Filter.Broadcast(),
-                    job.StartAnnounce,
-                    AnnouncementName,
-                    AnnouncementColor);
+                _chatSystem.DispatchStationAnnouncement(uid, Loc.GetString(job.StartAnnounce), AnnouncementName, colorOverride: AnnouncementColor);
 
-                data.EndTime = null;
+                ResetJobs((uid, data));
             }
         }
+
+    }
+
+    private void ResetJobs(Entity<ServiceJobsDataComponent> ent)
+    {
+        ent.Comp.ActiveJob = null;
+        ent.Comp.StationJobs = [];
+        ent.Comp.EndTime = null;
+
+        GetJobs(ent);
     }
 
     private void OnBUIOpened(Entity<ServiceJobBoardConsoleComponent> ent, ref BoundUIOpenedEvent args)
@@ -86,8 +88,7 @@ public sealed class ServiceJobBoardSystem : EntitySystem
         if (!_prototypeManager.TryIndex<ServiceJobPrototype>(args.JobId, out var job))
             return;
 
-        if (jobData.StationJobs != null &&
-            !jobData.StationJobs.Contains(job))
+        if (!jobData.StationJobs.Contains(job))
             return;
 
         jobData.ActiveJob = job;
@@ -115,7 +116,8 @@ public sealed class ServiceJobBoardSystem : EntitySystem
         var state = new ServiceJobBoardConsoleState(
             GetJobs(stationEnt),
             stationEnt.Comp.ActiveJob,
-            stationEnt.Comp.EndTime);
+            stationEnt.Comp.EndTime,
+            _timing.CurTime);
 
         _ui.SetUiState(ent.Owner, ServiceJobBoardUiKey.Key, state);
     }
@@ -131,8 +133,11 @@ public sealed class ServiceJobBoardSystem : EntitySystem
             ent.Comp.StationJobs = [];
 
             for (var i = 0; i < ent.Comp.MaxJobs; i++)
+            {
                 if (TryGetRandomJob(ent, out var job) && job != null)
                     ent.Comp.StationJobs.Add(job);
+            }
+
         }
         return ent.Comp.StationJobs;
     }
