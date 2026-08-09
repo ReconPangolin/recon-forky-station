@@ -9,8 +9,10 @@ namespace Content.Client._Impstation.Service;
 [GenerateTypedNameReferences]
 public sealed partial class ServiceJobBoardMenu : FancyWindow
 {
-    [Dependency] private readonly IEntityManager _entityManager = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    //Funky begin - Fix deprecated function
+    [Dependency] private IEntityManager _entityManager = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
+    //Funky end - Fix deprecated function
 
     public Action<string>? OnSelectButtonPressed;
 
