@@ -1,15 +1,8 @@
 ﻿- type: entity
   parent: BaseItem
-  id: HandheldPlantAnalyzer
-  name: plant analyzer
-  description: A hand-held body scanner capable of distinguishing vital signs of the subject.
+  abstract: True
+  id: BasePlantAnalyzer
   components:
-  - type: Sprite
-    sprite: Objects/Specific/Medical/healthanalyzer.rsi
-    layers:
-    - state: icon
-    - state: analyzer
-      shader: unshaded
   - type: Item
     heldPrefix: analyzer
     storedRotation: -90
@@ -24,3 +17,37 @@
   - type: PlantAnalyzer
     scanningEndSound:
       path: "/Audio/Items/Medical/healthscanner.ogg"
+    version: 1
+    scanDelay: 4s
+
+
+- type: entity
+  parent: BasePlantAnalyzer
+  id: PlantAnalyzerV1
+  name: plant analyzer v1
+  description: A hand-held body scanner capable of distinguishing vital signs of the subject.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/healthanalyzer.rsi
+    layers:
+    - state: icon
+    - state: analyzer
+      shader: unshaded
+
+- type: entity
+  parent: BasePlantAnalyzer
+  id: PlantAnalyzerV2
+  name: plant analyzer v2
+  description: A hand-held body scanner capable of distinguishing vital signs of the subject.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/healthanalyzer.rsi
+    layers:
+    - state: icon
+    - state: analyzer
+      shader: unshaded
+  - type: PlantAnalyzer
+    scanningEndSound:
+      path: "/Audio/Items/Medical/healthscanner.ogg"
+    version: 2
+    scanDelay: 2s

@@ -69,7 +69,7 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
             }
 
             component.IsAnalyzerActive = true;
-            UpdateScannedUser(uid, plant, true);
+            UpdateScannedUser((uid, component), plant, true);
         }
     }
 
@@ -196,15 +196,15 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
     /// <param name="plantAnalyzer">The health analyzer</param>
     /// <param name="target">The entity being scanned</param>
     /// <param name="scanMode">True makes the UI show ACTIVE, False makes the UI show INACTIVE</param>
-    public void UpdateScannedUser(EntityUid plantAnalyzer, EntityUid target, bool scanMode)
+    public void UpdateScannedUser(Entity<PlantAnalyzerComponent> plantAnalyzer, EntityUid target, bool scanMode)
     {
         if (!_uiSystem.HasUi(plantAnalyzer, PlantAnalyzerUiKey.Key))
             return;
 
-        var analyzerMessage = GetPlantAnalyzerUiState(target);
+        var analyzerMessage = GetPlantAnalyzerUiState(plantAnalyzer, target);
 
         _uiSystem.ServerSendUiMessage(
-            plantAnalyzer,
+            plantAnalyzer.Owner,
             PlantAnalyzerUiKey.Key,
             analyzerMessage
         );
@@ -215,7 +215,7 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
     /// </summary>
     /// <param name="target">The entity being scanned</param>
     /// <returns></returns>
-    public PlantAnalyzerUserMessage GetPlantAnalyzerUiState(EntityUid? target)
+    public PlantAnalyzerUserMessage GetPlantAnalyzerUiState(Entity<PlantAnalyzerComponent> plantAnalyzer, EntityUid? target)
     {
         if (TryComp<PlantHolderComponent>(target, out var plantHolderComp))
         {
@@ -224,13 +224,17 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
             {
                 return new PlantAnalyzerUserMessage(
                     GetNetEntity(target),
-                    2,
+                    plantAnalyzer.Comp.Version,
                     seed.Production,
                     seed.Maturation,
                     seed.Yield,
                     seed.Potency,
                     seed.Chemicals.Keys.ToList(),
-                    seed.DisplayName);
+                    seed.DisplayName,
+                    seed.Lifespan,
+                    seed.NutrientConsumption,
+                    seed.WaterConsumption,
+                    seed.IdealHeat);
             }
         }
 
@@ -242,7 +246,11 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
             1,
             1,
             null,
-            "No plant");
+            "No plant",
+            1,
+            1,
+            1,
+            1);
 
     }
 }

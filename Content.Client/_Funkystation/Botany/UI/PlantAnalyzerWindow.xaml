@@ -3,13 +3,12 @@
     xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
     xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
     MaxHeight="525"
-    MinWidth="300">
+    MinWidth="580">
     <ScrollContainer
-        Margin="5 5 5 5"
+        Margin="10 10 10 10"
         ReturnMeasure="True"
         VerticalExpand="True">
         <BoxContainer
-            Name="RootContainer"
             VerticalExpand="True"
             Orientation="Vertical">
             <Label
@@ -17,85 +16,173 @@
                 Text="{Loc plant-analyzer-window-no-plant-data-text}" />
 
             <BoxContainer
-                Name="PlantDataContainer"
+                Name="PlantTypeContainer"
                 Margin="0 0 0 5"
                 Orientation="Vertical">
-                <BoxContainer Orientation="Horizontal" Margin="0 0 0 5">
-                    <SpriteView OverrideDirection="South" Scale="2 2" Name="SpriteView" Access="Public" SetSize="64 64" />
-                    <TextureRect Name="NoDataTexture" Access="Public" SetSize="64 64" Visible="false" Stretch="KeepAspectCentered" TexturePath="/Textures/Interface/Misc/health_analyzer_out_of_range.png"/>
-                    <BoxContainer Margin="5 0 0 0" Orientation="Vertical" VerticalAlignment="Top">
-                        <RichTextLabel Name="PlantNameLabel" SetWidth="150" />
-                    </BoxContainer>
-                </BoxContainer>
+
+                <PanelContainer Margin="0 0 0 5">
+                    <PanelContainer.PanelOverride>
+                        <gfx:StyleBoxFlat BorderColor="#FFFFFF"
+                                          BorderThickness="0 2 0 2"/>
+                    </PanelContainer.PanelOverride>
+                    <RichTextLabel Name="PlantNameLabel" HorizontalAlignment="Center"/>
+                </PanelContainer>
+
+                <SpriteView OverrideDirection="South" Scale="2 2" Name="PlantSpriteView" Access="Public" SetSize="64 64" />
+                <TextureRect Name="NoDataTexture" Access="Public" SetSize="64 64" Visible="false" Stretch="KeepAspectCentered" TexturePath="/Textures/Interface/Misc/health_analyzer_out_of_range.png"/>
 
                 <PanelContainer StyleClasses="LowDivider" />
 
-                <GridContainer Margin="0 5 0 0" Columns="4">
-                    <PanelContainer>
-                        <PanelContainer.PanelOverride>
-                            <gfx:StyleBoxFlat BackgroundColor="#649466"
-                                              BorderColor="#5a5a5a"
-                                              BorderThickness="2 2 2 2"/>
-                        </PanelContainer.PanelOverride>
-                        <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
-                            <Label Text="{Loc 'plant-analyzer-window-plant-yield'}"
-                                   HorizontalAlignment="Center"/>
-                            <Label Name="YieldLabel"
-                                   StyleClasses="LabelSubText"
-                                   SetWidth="100" ClipText="True"
-                                   FontColorOverride="White"/>
-                        </BoxContainer>
-                    </PanelContainer>
-                    <PanelContainer>
-                        <PanelContainer.PanelOverride>
-                            <gfx:StyleBoxFlat
-                                              BorderColor="#5a5a5a"
-                                              BorderThickness="2 2 2 2"/>
-                        </PanelContainer.PanelOverride>
-                        <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
-                            <Label Text="{Loc 'plant-analyzer-window-plant-production'}"
-                                   HorizontalAlignment="Center"/>
-                            <Label Name="ProductionLabel"
-                                   StyleClasses="LabelSubText"
-                                   SetWidth="100" ClipText="True"
-                                   FontColorOverride="White"/>
-                        </BoxContainer>
-                    </PanelContainer>
-                    <PanelContainer>
-                        <PanelContainer.PanelOverride>
-                            <gfx:StyleBoxFlat BackgroundColor="#649466"
-                                              BorderColor="#5a5a5a"
-                                              BorderThickness="2 2 2 2"/>
-                        </PanelContainer.PanelOverride>
-                        <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
-                            <Label Text="{Loc 'plant-analyzer-window-plant-maturation'}"
-                                   HorizontalAlignment="Center"/>
-                            <Label Name="MaturationLabel"
-                                   StyleClasses="LabelSubText"
-                                   SetWidth="100" ClipText="True"
-                                   FontColorOverride="White"/>
-                        </BoxContainer>
-                    </PanelContainer>
-                    <PanelContainer>
-                        <PanelContainer.PanelOverride>
-                            <gfx:StyleBoxFlat
-                                              BorderColor="#5a5a5a"
-                                              BorderThickness="2 2 2 2"/>
-                        </PanelContainer.PanelOverride>
-                        <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
-                            <Label Text="{Loc 'plant-analyzer-window-plant-potency'}"
-                                   HorizontalAlignment="Center"/>
-                            <Label Name="PotencyLabel"
-                                   StyleClasses="LabelSubText"
-                                   SetWidth="100" ClipText="True"
-                                   FontColorOverride="White"/>
-                        </BoxContainer>
-                    </PanelContainer>
+                <!-- Plant Chems (Types of chems) -->
+                <RichTextLabel Name="ChemLabel"
+                               StyleClasses="LabelSubText"
+                               Visible="False"/>
 
-                </GridContainer>
+                <BoxContainer Name="PlantStats" Margin="0 5 0 0" Orientation="Vertical">
+                    <BoxContainer Name="PlantStatBasic" Margin="0 5 0 0" Orientation="Horizontal">
+                        <!-- Plant Yield -->
+                        <PanelContainer Margin="5 0 0 0">
+                            <PanelContainer.PanelOverride>
+                                <gfx:StyleBoxFlat BackgroundColor="#0C752F"
+                                                  BorderColor="#5a5a5a"
+                                                  BorderThickness="2 2 2 2"/>
+                            </PanelContainer.PanelOverride>
+                            <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
+                                <Label Text="{Loc 'plant-analyzer-window-plant-yield'}"
+                                       HorizontalAlignment="Center"/>
+                                <Label Name="YieldLabel"
+                                       StyleClasses="LabelSubText"
+                                       SetWidth="120" ClipText="True"
+                                       FontColorOverride="White"/>
+                            </BoxContainer>
+                        </PanelContainer>
+
+                        <!-- Plant Potency (Amount of chems) -->
+                        <PanelContainer Margin="5 0 0 0">
+                            <PanelContainer.PanelOverride>
+                                <gfx:StyleBoxFlat
+                                    BorderColor="#5a5a5a"
+                                    BorderThickness="2 2 2 2"/>
+                            </PanelContainer.PanelOverride>
+                            <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
+                                <Label Text="{Loc 'plant-analyzer-window-plant-potency'}"
+                                       HorizontalAlignment="Center"/>
+                                <Label Name="PotencyLabel"
+                                       StyleClasses="LabelSubText"
+                                       SetWidth="120" ClipText="True"
+                                       FontColorOverride="White"/>
+                            </BoxContainer>
+                        </PanelContainer>
+
+                        <!-- Plant Maturation (Time to grow) -->
+                        <PanelContainer Margin="5 0 0 0">
+                            <PanelContainer.PanelOverride>
+                                <gfx:StyleBoxFlat BackgroundColor="#0C752F"
+                                                  BorderColor="#5a5a5a"
+                                                  BorderThickness="2 2 2 2"/>
+                            </PanelContainer.PanelOverride>
+                            <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
+                                <Label Text="{Loc 'plant-analyzer-window-plant-maturation'}"
+                                       HorizontalAlignment="Center"/>
+                                <Label Name="MaturationLabel"
+                                       StyleClasses="LabelSubText"
+                                       SetWidth="120" ClipText="True"
+                                       FontColorOverride="White"/>
+                            </BoxContainer>
+                        </PanelContainer>
+
+                        <!-- Plant Production (Time to regrow produce) -->
+                        <PanelContainer Margin="5 0 0 0">
+                            <PanelContainer.PanelOverride>
+                                <gfx:StyleBoxFlat
+                                    BorderColor="#5a5a5a"
+                                    BorderThickness="2 2 2 2"/>
+                            </PanelContainer.PanelOverride>
+                            <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
+                                <Label Text="{Loc 'plant-analyzer-window-plant-production'}"
+                                       HorizontalAlignment="Center"/>
+                                <Label Name="ProductionLabel"
+                                       StyleClasses="LabelSubText"
+                                       SetWidth="120" ClipText="True"
+                                       FontColorOverride="White"/>
+                            </BoxContainer>
+                        </PanelContainer>
+
+                    </BoxContainer>
+
+                    <BoxContainer Name="PlantStatTolerance" Margin="0 5 0 0" Orientation="Horizontal" Visible="False">
+                        <!-- Lifespan -->
+                        <PanelContainer Margin="5 0 0 0">
+                            <PanelContainer.PanelOverride>
+                                <gfx:StyleBoxFlat
+                                    BorderColor="#5a5a5a"
+                                    BorderThickness="2 2 2 2"/>
+                            </PanelContainer.PanelOverride>
+                            <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
+                                <Label Text="{Loc 'plant-analyzer-window-plant-lifespan'}"
+                                       HorizontalAlignment="Center"/>
+                                <Label Name="LifespanLabel"
+                                       StyleClasses="LabelSubText"
+                                       SetWidth="120" ClipText="True"
+                                       FontColorOverride="White"/>
+                            </BoxContainer>
+                        </PanelContainer>
+
+
+                        <!-- Plant Nutrient Consumption -->
+                        <PanelContainer Margin="5 0 0 0">
+                            <PanelContainer.PanelOverride>
+                                <gfx:StyleBoxFlat BackgroundColor="#0C752F"
+                                                  BorderColor="#5a5a5a"
+                                                  BorderThickness="2 2 2 2"/>
+                            </PanelContainer.PanelOverride>
+                            <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
+                                <Label Text="{Loc 'plant-analyzer-window-plant-consump'}"
+                                       HorizontalAlignment="Center"/>
+                                <Label Name="NutrientConLabel"
+                                       StyleClasses="LabelSubText"
+                                       SetWidth="120" ClipText="True"
+                                       FontColorOverride="White"/>
+                            </BoxContainer>
+                        </PanelContainer>
+
+                        <!-- Plant Water Consumption -->
+                        <PanelContainer Margin="5 0 0 0">
+                            <PanelContainer.PanelOverride>
+                                <gfx:StyleBoxFlat
+                                    BorderColor="#5a5a5a"
+                                    BorderThickness="2 2 2 2"/>
+                            </PanelContainer.PanelOverride>
+                            <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
+                                <Label Text="{Loc 'plant-analyzer-window-plant-consump'}"
+                                       HorizontalAlignment="Center"/>
+                                <Label Name="WaterConLabel"
+                                       StyleClasses="LabelSubText"
+                                       SetWidth="120" ClipText="True"
+                                       FontColorOverride="White"/>
+                            </BoxContainer>
+                        </PanelContainer>
+
+                        <!-- Plant Heat Tolerence -->
+                        <PanelContainer Margin="5 0 0 0">
+                            <PanelContainer.PanelOverride>
+                                <gfx:StyleBoxFlat BackgroundColor="#0C752F"
+                                                  BorderColor="#5a5a5a"
+                                                  BorderThickness="2 2 2 2"/>
+                            </PanelContainer.PanelOverride>
+                            <BoxContainer Orientation="Vertical" Margin="5 1 5 1">
+                                <Label Text="{Loc 'plant-analyzer-window-plant-heat'}"
+                                       HorizontalAlignment="Center"/>
+                                <Label Name="HeatLabel"
+                                       StyleClasses="LabelSubText"
+                                       SetWidth="120" ClipText="True"
+                                       FontColorOverride="White"/>
+                            </BoxContainer>
+                        </PanelContainer>
+                    </BoxContainer>
+                </BoxContainer>
             </BoxContainer>
-            <RichTextLabel Name="ChemLabel"
-                           StyleClasses="LabelSubText"/>
+
         </BoxContainer>
     </ScrollContainer>
 </controls:FancyWindow>

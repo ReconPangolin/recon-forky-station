@@ -36,7 +36,7 @@ namespace Content.Client._Funkystation.Botany.UI
 
             if (target == null)
             {
-                SpriteView.Visible = false;
+                PlantSpriteView.Visible = false;
 
                 NoDataTexture.Visible = true;
 
@@ -44,8 +44,8 @@ namespace Content.Client._Funkystation.Botany.UI
                 return;
             }
 
-            SpriteView.SetEntity(target.Value);
-            SpriteView.Visible = true;
+            PlantSpriteView.SetEntity(target.Value);
+            PlantSpriteView.Visible = true;
 
             NoDataTexture.Visible = false;
 
@@ -63,41 +63,51 @@ namespace Content.Client._Funkystation.Botany.UI
 
             MaturationLabel.Text = $"{msg.Maturation} minutes";
 
-            PotencyLabel.Text = $"{msg.Potency/100f}m";
+            PotencyLabel.Text = $"{msg.Potency/100f}kg";
 
 
-            if (msg is { AnalyzerTier: > 1, ChemsBasic: not null })
+            LifespanLabel.Text = $"{msg.Lifespan} minutes";
+
+            NutrientConLabel.Text = $"{msg.NutrientCons} nutri/m";
+
+            WaterConLabel.Text = $"{msg.WaterCons} water/m";
+
+            HeatLabel.Text = $"{msg.IdealHeat}K";
+
+
+            if (msg.AnalyzerTier > 1)
             {
-                var chemString = new StringBuilder("Contains ", 256);
-
-                var addComma = false;
-                foreach (var chemical in msg.ChemsBasic)
+                PlantStatTolerance.Visible = true;
+                if (msg.ChemsBasic is not null)
                 {
-                    _prototypes.TryIndex<ReagentPrototype>(chemical, out ReagentPrototype? reagent);
+                    var chemString = new StringBuilder("Contains ", 256);
 
-                    if (reagent == null)
+                    var addComma = false;
+                    foreach (var chemical in msg.ChemsBasic)
                     {
-                        continue;
-                    }
+                        _prototypes.TryIndex<ReagentPrototype>(chemical, out ReagentPrototype? reagent);
 
-                    if (!addComma)
-                    {
-                        addComma = true;
-                    }
-                    else
-                    {
-                        chemString.Append(", ");
-                    }
+                        if (reagent == null)
+                        {
+                            continue;
+                        }
 
-                    chemString.Append($"[color={reagent.SubstanceColor.ToHex()}]{reagent.LocalizedName}[/color]");
+                        if (!addComma)
+                        {
+                            addComma = true;
+                        }
+                        else
+                        {
+                            chemString.Append(", ");
+                        }
+
+                        chemString.Append($"[color={reagent.SubstanceColor.ToHex()}]{reagent.LocalizedName}[/color]");
+                    }
+                    chemString.Append(".");
+
+                    ChemLabel.Text =  chemString.ToString();
+                    ChemLabel.Visible = true;
                 }
-                chemString.Append(".");
-
-                ChemLabel.Text =  chemString.ToString();
-            }
-            else
-            {
-                ChemLabel.Visible = false;
             }
 
         }
