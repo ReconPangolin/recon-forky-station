@@ -12,7 +12,6 @@ using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 
 using Content.Shared._Funkystation.Botany.PlantAnalyzer;
-using Content.Server.Botany;
 using Content.Server.Botany.Components;
 
 
@@ -40,6 +39,7 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
 
     public override void Update(float frameTime)
     {
+
         var analyzerQuery = EntityQueryEnumerator<PlantAnalyzerComponent, TransformComponent>();
         while (analyzerQuery.MoveNext(out var uid, out var component, out var transform))
         {
@@ -58,7 +58,7 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
 
             component.NextUpdate = _timing.CurTime + component.UpdateInterval;
 
-            //Get distance between health analyzer and the scanned entity
+            //Get distance between plant analyzer and the scanned entity
             //null is infinite range
             var plantCoords = Transform(plant).Coordinates;
             if (component.MaxScanRange != null && !_transformSystem.InRange(plantCoords, transform.Coordinates, component.MaxScanRange.Value))
@@ -69,7 +69,7 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
             }
 
             component.IsAnalyzerActive = true;
-            UpdateScannedUser((uid, component), plant, true);
+            UpdateScannedPlant((uid, component), plant, true);
         }
     }
 
@@ -78,14 +78,15 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
     /// <summary>
     /// Trigger the doafter for scanning
     /// </summary>
-    private void OnAfterInteract(Entity<PlantAnalyzerComponent> uid, ref AfterInteractEvent args)
+    private void OnAfterInteract(Entity<PlantAnalyzerComponent> ent, ref AfterInteractEvent args)
     {
-        if (args.Target == null || !args.CanReach || !HasComp<PlantHolderComponent>(args.Target) || !_cell.HasDrawCharge(uid.Owner, user: args.User))
+        if (args.Target == null || !args.CanReach || !HasComp<PlantHolderComponent>(args.Target) || !_cell.HasDrawCharge(ent.Owner, user: args.User))
             return;
 
-        _audio.PlayPvs(uid.Comp.ScanningBeginSound, uid);
+        if (!ent.Comp.Silent)
+            _audio.PlayPvs(ent.Comp.ScanningBeginSound, ent);
 
-        var doAfterCancelled = !_doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, args.User, uid.Comp.ScanDelay, new PlantAnalyzerDoAfterEvent(), uid, target: args.Target, used: uid)
+        var doAfterCancelled = !_doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, args.User, ent.Comp.ScanDelay, new PlantAnalyzerDoAfterEvent(), ent, target: args.Target, used: ent)
         {
             NeedHand = true,
             BreakOnMove = true,
@@ -93,16 +94,19 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
     }
 
 
-    private void OnDoAfter(Entity<PlantAnalyzerComponent> uid, ref PlantAnalyzerDoAfterEvent args)
+    /// <summary>
+    /// Analyze an entity after a doafter
+    /// </summary>
+    private void OnDoAfter(Entity<PlantAnalyzerComponent> ent, ref PlantAnalyzerDoAfterEvent args)
     {
-        if (args.Handled || args.Cancelled || args.Target == null || !_cell.HasDrawCharge(uid.Owner, user: args.User))
+        if (args.Handled || args.Cancelled || args.Target == null || !_cell.HasDrawCharge(ent.Owner, user: args.User))
             return;
 
-        if (!uid.Comp.Silent)
-            _audio.PlayPvs(uid.Comp.ScanningEndSound, uid);
+        if (!ent.Comp.Silent)
+            _audio.PlayPvs(ent.Comp.ScanningEndSound, ent);
 
-        OpenUserInterface(args.User, uid);
-        BeginAnalyzingEntity(uid, args.Target.Value);
+        OpenUserInterface(args.User, ent);
+        BeginAnalyzingEntity(ent, args.Target.Value);
         args.Handled = true;
     }
 
@@ -111,10 +115,10 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
     /// <summary>
     /// Turn off when placed into a storage item or moved between slots/hands
     /// </summary>
-    private void OnInsertedIntoContainer(Entity<PlantAnalyzerComponent> uid, ref EntGotInsertedIntoContainerMessage args)
+    private void OnInsertedIntoContainer(Entity<PlantAnalyzerComponent> ent, ref EntGotInsertedIntoContainerMessage args)
     {
-        if (uid.Comp.ScannedEntity is { } plant)
-            _toggle.TryDeactivate(uid.Owner);
+        if (ent.Comp.ScannedEntity is { } plant)
+            _toggle.TryDeactivate(ent.Owner);
     }
 
     /// <summary>
@@ -127,15 +131,18 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
     }
 
     /// <summary>
-    /// Turn off the analyser when dropped
+    /// Turn off the analyzer when dropped
     /// </summary>
-    private void OnDropped(Entity<PlantAnalyzerComponent> uid, ref DroppedEvent args)
+    private void OnDropped(Entity<PlantAnalyzerComponent> ent, ref DroppedEvent args)
     {
-        if (uid.Comp.ScannedEntity is { } plant)
-            _toggle.TryDeactivate(uid.Owner);
+        if (ent.Comp.ScannedEntity is { } plant)
+            _toggle.TryDeactivate(ent.Owner);
     }
 
 
+    /// <summary>
+    /// Turn open the analyzer UI
+    /// </summary>
     private void OpenUserInterface(EntityUid user, EntityUid analyzer)
     {
         if (!_uiSystem.HasUi(analyzer, PlantAnalyzerUiKey.Key))
@@ -148,63 +155,63 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
     /// <summary>
     /// Mark the entity as having its health analyzed, and link the analyzer to it
     /// </summary>
-    /// <param name="plantAnalyzer">The health analyzer that should receive the updates</param>
-    /// <param name="target">The entity to start analyzing</param>
-    private void BeginAnalyzingEntity(Entity<PlantAnalyzerComponent> plantAnalyzer, EntityUid target)
+    /// <param name="ent">The plant analyzer</param>
+    /// <param name="target">The entity being scanned</param>
+    private void BeginAnalyzingEntity(Entity<PlantAnalyzerComponent> ent, EntityUid target)
     {
         //Link the health analyzer to the scanned entity
-        plantAnalyzer.Comp.ScannedEntity = target;
+        ent.Comp.ScannedEntity = target;
 
-        _toggle.TryActivate(plantAnalyzer.Owner);
+        _toggle.TryActivate(ent.Owner);
 
-        UpdateScannedUser(plantAnalyzer, target, true);
+        UpdateScannedPlant(ent, target, true);
     }
 
     /// <summary>
     /// Remove the analyzer from the active list, and remove the component if it has no active analyzers
     /// </summary>
-    /// <param name="plantAnalyzer">The health analyzer that's receiving the updates</param>
-    /// <param name="target">The entity to analyze</param>
-    private void StopAnalyzingEntity(Entity<PlantAnalyzerComponent> plantAnalyzer, EntityUid target)
+    /// <param name="ent">The plant analyzer</param>
+    /// <param name="target">The entity being scanned</param>
+    private void StopAnalyzingEntity(Entity<PlantAnalyzerComponent> ent, EntityUid target)
     {
         //Unlink the analyzer
-        plantAnalyzer.Comp.ScannedEntity = null;
-        _toggle.TryDeactivate(plantAnalyzer.Owner);
+        ent.Comp.ScannedEntity = null;
+        _toggle.TryDeactivate(ent.Owner);
 
-        UpdateScannedUser(plantAnalyzer, target, false);
+        UpdateScannedPlant(ent, target, false);
     }
 
 
     /// <summary>
     /// If the scanner is active, sends one last update and sets it to inactive.
     /// </summary>
-    /// <param name="plantAnalyzer">The health analyzer that's receiving the updates</param>
-    /// <param name="target">The entity to analyze</param>
-    private void PauseAnalyzingEntity(Entity<PlantAnalyzerComponent> plantAnalyzer, EntityUid target)
+    /// <param name="ent">The plant analyzer</param>
+    /// <param name="target">The entity being scanned</param>
+    private void PauseAnalyzingEntity(Entity<PlantAnalyzerComponent> ent, EntityUid target)
     {
-        if (!plantAnalyzer.Comp.IsAnalyzerActive)
+        if (!ent.Comp.IsAnalyzerActive)
             return;
 
-        UpdateScannedUser(plantAnalyzer, target, false);
-        plantAnalyzer.Comp.IsAnalyzerActive = false;
+        UpdateScannedPlant(ent, target, false);
+        ent.Comp.IsAnalyzerActive = false;
     }
 
 
     /// <summary>
     /// Send an update for the target to the healthAnalyzer
     /// </summary>
-    /// <param name="plantAnalyzer">The health analyzer</param>
+    /// <param name="ent">The plant analyzer</param>
     /// <param name="target">The entity being scanned</param>
     /// <param name="scanMode">True makes the UI show ACTIVE, False makes the UI show INACTIVE</param>
-    public void UpdateScannedUser(Entity<PlantAnalyzerComponent> plantAnalyzer, EntityUid target, bool scanMode)
+    public void UpdateScannedPlant(Entity<PlantAnalyzerComponent> ent, EntityUid target, bool scanMode)
     {
-        if (!_uiSystem.HasUi(plantAnalyzer, PlantAnalyzerUiKey.Key))
+        if (!_uiSystem.HasUi(ent, PlantAnalyzerUiKey.Key))
             return;
 
-        var analyzerMessage = GetPlantAnalyzerUiState(plantAnalyzer, target);
+        var analyzerMessage = GetPlantAnalyzerUiState(ent, target);
 
         _uiSystem.ServerSendUiMessage(
-            plantAnalyzer.Owner,
+            ent.Owner,
             PlantAnalyzerUiKey.Key,
             analyzerMessage
         );
@@ -213,24 +220,25 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
     /// <summary>
     /// Creates a HealthAnalyzerState based on the current state of an entity.
     /// </summary>
+    /// <param name="ent">The plant analyzer</param>
     /// <param name="target">The entity being scanned</param>
     /// <returns></returns>
-    public PlantAnalyzerUserMessage GetPlantAnalyzerUiState(Entity<PlantAnalyzerComponent> plantAnalyzer, EntityUid? target)
+    public PlantAnalyzerUserMessage GetPlantAnalyzerUiState(Entity<PlantAnalyzerComponent> ent, EntityUid? target)
     {
         if (TryComp<PlantHolderComponent>(target, out var plantHolderComp))
         {
-            SeedData? seed = plantHolderComp.Seed;
+            var seed = plantHolderComp.Seed;
             if (seed != null)
             {
                 return new PlantAnalyzerUserMessage(
                     GetNetEntity(target),
-                    plantAnalyzer.Comp.Version,
+                    ent.Comp.Version,
+                    seed.DisplayName,
                     seed.Production,
                     seed.Maturation,
                     seed.Yield,
                     seed.Potency,
                     seed.Chemicals.Keys.ToList(),
-                    seed.DisplayName,
                     seed.Lifespan,
                     seed.NutrientConsumption,
                     seed.WaterConsumption,
@@ -241,12 +249,12 @@ public sealed partial class PlantAnalyzerSystem : EntitySystem
         return new PlantAnalyzerUserMessage(
             GetNetEntity(target),
             1,
+            "No plant",
             1,
             1,
             1,
             1,
             null,
-            "No plant",
             1,
             1,
             1,

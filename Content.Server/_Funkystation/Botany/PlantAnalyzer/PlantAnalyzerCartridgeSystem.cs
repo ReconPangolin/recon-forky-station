@@ -4,9 +4,9 @@ using Content.Shared.CartridgeLoader;
 
 namespace Content.Server._Funkystation.Botany.PlantAnalyzer;
 
-public sealed class PlantAnalyzerCartridgeSystem : EntitySystem
+public sealed partial class PlantAnalyzerCartridgeSystem : EntitySystem
 {
-    [Dependency] private readonly CartridgeLoaderSystem _cartridgeLoaderSystem = default!;
+    [Dependency] private CartridgeLoaderSystem _cartridgeLoaderSystem = default!;
 
     public override void Initialize()
     {

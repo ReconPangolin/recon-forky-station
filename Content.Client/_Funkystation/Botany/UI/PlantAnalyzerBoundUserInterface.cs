@@ -5,14 +5,10 @@ using Robust.Client.UserInterface;
 namespace Content.Client._Funkystation.Botany.UI
 {
     [UsedImplicitly]
-    public sealed class PlantAnalyzerBoundUserInterface : BoundUserInterface
+    public sealed class PlantAnalyzerBoundUserInterface(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
     {
         [ViewVariables]
         private PlantAnalyzerWindow? _window;
-
-        public PlantAnalyzerBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
-        {
-        }
 
         protected override void Open()
         {

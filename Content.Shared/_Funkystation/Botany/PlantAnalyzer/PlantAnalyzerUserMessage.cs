@@ -24,8 +24,8 @@ public sealed class PlantAnalyzerUserMessage : BoundUserInterfaceMessage
     public float IdealHeat;
 
 
-    public PlantAnalyzerUserMessage(NetEntity? targetEntity, int analyzerTier, float production, float maturation,
-        int yield, float potency, List<string>? chems, string plantName,
+    public PlantAnalyzerUserMessage(NetEntity? targetEntity, int analyzerTier, string plantName,
+        float production, float maturation, int yield, float potency, List<string>? chems,
         float lifespan, float nutrientCons, float waterCons, float idealHeat)
     {
         TargetEntity = targetEntity;
@@ -38,19 +38,13 @@ public sealed class PlantAnalyzerUserMessage : BoundUserInterfaceMessage
         PlantName = plantName;
         Potency = potency;
 
-        Lifespan = lifespan;
-        NutrientCons = nutrientCons;
-        WaterCons = waterCons;
-        IdealHeat = idealHeat;
-
         if (analyzerTier > 1)
         {
             ChemsBasic = chems;
-        }
-
-        if (analyzerTier > 2)
-        {
-
+            Lifespan = lifespan;
+            NutrientCons = nutrientCons;
+            WaterCons = waterCons;
+            IdealHeat = idealHeat;
         }
     }
 }

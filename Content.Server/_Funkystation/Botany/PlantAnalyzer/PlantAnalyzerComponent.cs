@@ -4,7 +4,7 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 namespace Content.Server._Funkystation.Botany.PlantAnalyzer;
 
 /// <summary>
-/// After scanning, retrieves the target Uid to use with its related UI.
+/// After scanning, retrieves the target uid to use with its related UI.
 /// </summary>
 /// <remarks>
 /// Requires <c>ItemToggleComponent</c>.
