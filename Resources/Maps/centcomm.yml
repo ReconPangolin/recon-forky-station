@@ -24077,7 +24077,7 @@ entities:
     - type: Transform
       pos: 6.5,-23.5
       parent: 1668
-- proto: CrateSecurityTrackingMindshieldImplants
+- proto: CrateTrackingImplants #Funky - Swapped from CrateSecurityTrackingMindshieldImplants since mindshields are do not map
   entities:
   - uid: 2236
     components:
@@ -43891,37 +43891,7 @@ entities:
     components:
     - type: Transform
       pos: 15.114939,30.81574
-      parent: 1668
-- proto: MindShieldImplanter
-  entities:
-  - uid: 2478
-    components:
-    - type: Transform
-      parent: 2464
-    - type: Physics
-      canCollide: False
-    - type: InsideEntityStorage
-  - uid: 2491
-    components:
-    - type: Transform
-      parent: 2480
-    - type: Physics
-      canCollide: False
-    - type: InsideEntityStorage
-  - uid: 2506
-    components:
-    - type: Transform
-      parent: 2496
-    - type: Physics
-      canCollide: False
-    - type: InsideEntityStorage
-  - uid: 2522
-    components:
-    - type: Transform
-      parent: 2512
-    - type: Physics
-      canCollide: False
-    - type: InsideEntityStorage
+      parent: 1668 #Funky - Removed mindshield
 - proto: Mirror
   entities:
   - uid: 2789

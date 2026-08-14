@@ -44951,7 +44951,7 @@ entities:
     - type: Transform
       pos: 46.5,-9.5
       parent: 2
-- proto: CrateSecurityTrackingMindshieldImplants
+- proto: CrateTrackingImplants #Funky - Swapped from CrateSecurityTrackingMindshieldImplants since mindshields are do not map
   entities:
   - uid: 14832
     components:

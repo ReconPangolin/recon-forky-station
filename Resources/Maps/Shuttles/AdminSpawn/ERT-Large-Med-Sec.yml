@@ -3063,7 +3063,7 @@ entities:
         moles:
           Oxygen: 1.7459903
           Nitrogen: 6.568249
-- proto: CrateSecurityTrackingMindshieldImplants
+- proto: CrateTrackingImplants #Funky - Swapped from CrateSecurityTrackingMindshieldImplants since mindshields are do not map
   entities:
   - uid: 83
     components:

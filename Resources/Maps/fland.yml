@@ -107400,7 +107400,7 @@ entities:
           showEnts: False
           occludes: True
           ent: null
-- proto: CrateSecurityTrackingMindshieldImplants
+- proto: CrateTrackingImplants #Funky - Swapped from CrateSecurityTrackingMindshieldImplants since mindshields are do not map
   entities:
   - uid: 35722
     components:

@@ -49669,7 +49669,7 @@ entities:
     - type: Transform
       pos: 64.5,-3.5
       parent: 2
-- proto: CrateMindShieldImplants
+- proto: CrateMedical
   entities:
   - uid: 9285
     components:

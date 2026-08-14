@@ -75290,7 +75290,7 @@ entities:
     - type: Transform
       pos: -4.5,-47.5
       parent: 2
-- proto: CrateMindShieldImplants
+- proto: CrateMedical #Funky - Swapped from CrateMindShieldImplants
   entities:
   - uid: 5960
     components:
@@ -132421,25 +132421,7 @@ entities:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: -36.512184,-24.471539
-      parent: 2
-- proto: MindShieldImplanter
-  entities:
-  - uid: 5961
-    components:
-    - type: Transform
-      parent: 5960
-    - type: Physics
-      canCollide: False
-    - type: InsideEntityStorage
-      storage: 5960
-  - uid: 5962
-    components:
-    - type: Transform
-      parent: 5960
-    - type: Physics
-      canCollide: False
-    - type: InsideEntityStorage
-      storage: 5960
+      parent: 2  #Funky - Removed mindshield
 - proto: MirrorModern
   entities:
   - uid: 20963
