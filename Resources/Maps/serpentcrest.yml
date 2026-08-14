@@ -75289,34 +75289,7 @@ entities:
     components:
     - type: Transform
       pos: -4.5,-47.5
-      parent: 2
-- proto: CrateMedical #Funky - Swapped from CrateMindShieldImplants
-  entities:
-  - uid: 5960
-    components:
-    - type: Transform
-      pos: 12.5,17.5
-      parent: 2
-    - type: EntityStorage
-      air:
-        volume: 200
-        immutable: False
-        temperature: 293.14673
-        moles:
-          Oxygen: 1.7459903
-          Nitrogen: 6.568249
-    - type: ContainerContainer
-      containers:
-        entity_storage: !type:Container
-          showEnts: False
-          occludes: True
-          ents:
-          - 5962
-          - 5961
-        paper_label: !type:ContainerSlot
-          showEnts: False
-          occludes: True
-          ent: null
+      parent: 2 #Funky - Removed mindshield crate
 - proto: CrateNPCHamlet
   entities:
   - uid: 8272

@@ -43370,8 +43370,7 @@ entities:
           - 2475
           - 2476
           - 2477
-          - 2478
-          - 2479
+          - 2479 #Funky - Removed mindshield
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -43397,7 +43396,7 @@ entities:
           - 2483
           - 2482
           - 2481
-          - 2491
+          - 2492 #Funky - Removed mindshield
           - 2492
           - 2493
           - 2494
@@ -43417,8 +43416,7 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 2506
-          - 2505
+          - 2505 #Funky - Removed mindshield
           - 2504
           - 2503
           - 2502
@@ -43447,8 +43445,7 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 2522
-          - 2521
+          - 2521 #Funky - Removed mindshield
           - 2520
           - 2519
           - 2518
@@ -43891,7 +43888,7 @@ entities:
     components:
     - type: Transform
       pos: 15.114939,30.81574
-      parent: 1668 #Funky - Removed mindshield
+      parent: 1668
 - proto: Mirror
   entities:
   - uid: 2789
