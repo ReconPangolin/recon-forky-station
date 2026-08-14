@@ -203,7 +203,7 @@ namespace Content.IntegrationTests.Tests
                 return; // We just pass immediately.
             }
 
-            //Funky - Only check funky and ruin maps for DO NOT MAP
+            //Funky - Only check funky and ruin maps
             if (map.ToString().Count('/') < 3)
                 return;
 
