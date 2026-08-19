@@ -17,7 +17,7 @@
 
 - type: guideEntry
   id: FuRuleC0
-  name: guide-entry-rules-c1
+  name: guide-entry-rules-c0
   ruleEntry: true
   text: "/ServerInfo/_Funkystation/Guidebook/ServerRules/CoreRules/RuleC0AdminRulings.xml"
 
