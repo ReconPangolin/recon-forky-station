@@ -20,7 +20,7 @@ public sealed partial class SalvageSystem
     [Dependency] private EntityQuery<SalvageMobRestrictionsComponent> _salvMobQuery = default!;
     [Dependency] private EntityQuery<MobStateComponent> _mobStateQuery = default!;
 
-    private static readonly ProtoId<RadioChannelPrototype> MagnetChannel = "Prisoner";
+    private static readonly ProtoId<RadioChannelPrototype> MagnetChannel = "Prisoner"; //Funky - Swapped from supply to prisoner radio
 
     private List<(Entity<TransformComponent> Entity, EntityUid MapUid, Vector2 LocalPosition)> _detachEnts = new();
 
