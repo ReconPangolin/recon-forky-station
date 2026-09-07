@@ -6,6 +6,7 @@
 
   Revealing conditions reveal the shielded information for the round, not for a specific instance. This means that once a revealing condition is met in a round, the shield no longer applies in any case for the remainder of the round.
 
+  When the metashield is lifted for someone with it in play, you do not automatically learn everything about that antag. Your character only knows as much as they are directly told in that round.
 
   ## Lifting the Shield
 
@@ -38,7 +39,6 @@
 
   As a standard crew member, you do *not* know the objectives or abilities of any antagonist until the shield is revealed. However, you may know about rumors or concepts that relate to a specific antagonist, or that specific items or people are high-risk and require safekeeping. For example:
   - Knowing that someone is a traitor is shielded; however, you may report them for theft or murder.
-  - Knowing that someone is a changeling is shielded; however, genetic horrors beyond your imagination should probably not be on station. You can report them.
   - Knowing that a silicon is a xenoborg and trying to convert the station is shielded; however, your character could be aware that xenoborgs are not a Nanotrasen model and can be reported as a potential threat if seen.
 
   Essentially, do not take any action because you know that someone is antagonist, take action depending on *what they have done.* Avoid callouts that name the antagonist or game mode, at least until the shield has been lifted. If you find evidence that is inexcusably from an antagonist, bring it to a command member in order to "force" them to reveal the shield to you. Command is your boss, and you should consult them if you don't know what to do, IC or OOC.
