@@ -4,4 +4,4 @@
   components:
   - type: SalvageMagnetData
     offerCooldown: 1m
-    activeTime: 10m
+    activeTime: 7m
