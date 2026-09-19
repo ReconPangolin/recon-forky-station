@@ -1,0 +1,10 @@
+﻿- type: mutationTable
+  id: StandardTable
+  table: !type:GroupMutationSelector
+    children:
+    - !type:SingleMutationSelector
+      id: PlantHot
+      weight: 1
+    - !type:SingleMutationSelector
+      id: PlantShocking
+      weight: 0.5

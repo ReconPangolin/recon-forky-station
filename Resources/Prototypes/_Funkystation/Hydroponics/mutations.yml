@@ -7,3 +7,11 @@
       multiplierOnExisting: 0.75
     - !type:Ignite
     appliesToHarvester: true
+
+- type: fuPlantMutation
+  id: PlantShocking
+  plantEffects:
+  - effects:
+    - !type:Electrocute
+      siemensCoefficient: 0.5
+    appliesToHarvester: true
