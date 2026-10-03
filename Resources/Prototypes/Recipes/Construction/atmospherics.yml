@@ -348,7 +348,6 @@
   targetNode: filter
   mirror: !type:CreateVariants
     values: [ GasFilterFlipped, GasFilterFlippedAlt1, GasFilterFlippedAlt2 ]
-  mirror: GasFilterFlipped
   conditions:
     - !type:NoUnstackableInTile
 
@@ -362,7 +361,6 @@
   targetNode: filterflipped
   mirror: !type:CreateVariants
     values: [ GasFilter, GasFilterAlt1, GasFilterAlt2 ]
-  mirror: GasFilter
   conditions:
     - !type:NoUnstackableInTile
 
@@ -377,7 +375,6 @@
   targetNode: mixer
   mirror: !type:CreateVariants
     values: [ GasMixerFlipped, GasMixerFlippedAlt1, GasMixerFlippedAlt2 ]
-  mirror: GasMixerFlipped
   conditions:
     - !type:NoUnstackableInTile
 
@@ -391,7 +388,6 @@
   targetNode: mixerflipped
   mirror: !type:CreateVariants
     values: [ GasMixer, GasMixerAlt1, GasMixerAlt2 ]
-  mirror: GasMixer
   conditions:
     - !type:NoUnstackableInTile
 

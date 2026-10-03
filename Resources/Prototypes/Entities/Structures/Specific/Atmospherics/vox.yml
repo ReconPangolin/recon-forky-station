@@ -68,11 +68,6 @@
     - Zauker # Funky atmos - /tg/ gases
     - Helium # Funky atmos - /tg/ gases
     - AntiNoblium # Funky atmos - /tg/ gases
-  - type: AtmosPipeLayers # Funky
-    alternativePrototypes:
-      Primary: GasVentScrubberVox
-      Secondary: GasVentScrubberVoxAlt1
-      Tertiary: GasVentScrubberVoxAlt2
 
 # use this to prevent overriding filters with hardcoded defaults
 - type: entity
