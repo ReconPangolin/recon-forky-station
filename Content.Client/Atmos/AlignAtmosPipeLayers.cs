@@ -150,7 +150,9 @@ public sealed partial class AlignAtmosPipeLayers : SnapgridCenter
 
     private void UpdateHijackedPlacer(AtmosPipeLayer layer, ScreenCoordinates mouseScreen)
     {
-        var hijack = pManager.Hijack as ConstructionPlacementHijack;
+        // funky. generalized from a hardcoded ConstructionPlacementHijack cast so other hijacks can also get mouse position for layers
+        if (pManager.Hijack is not IAtmosPipeLayerHijack hijack)
+            return;
 
         // Determine the current entity prototype to be constructed
         if (string.IsNullOrEmpty(hijack?.CurrentPrototype?.ID)
@@ -173,7 +175,7 @@ public sealed partial class AlignAtmosPipeLayers : SnapgridCenter
             return;
 
         // The new construction prototype must differ from the last
-        if (newConstructionPrototype.Equals((pManager.Hijack as ConstructionPlacementHijack)?.CurrentPrototype))
+        if (newConstructionPrototype.Equals(hijack.CurrentPrototype)) // funky (simplified this)
             return;
 
         var current = pManager.CurrentPermission; // funky
@@ -183,7 +185,10 @@ public sealed partial class AlignAtmosPipeLayers : SnapgridCenter
         {
             IsTile = false,
             PlacementOption = newConstructionPrototype.PlacementMode,
-        }, new ConstructionPlacementHijack(newConstructionPrototype));
+            Range = current?.Range ?? 0, // funky
+            UseEditorContext = current?.UseEditorContext ?? true, // funky
+        },
+        hijack.WithPrototype(newConstructionPrototype));
 
         if (pManager.CurrentMode is AlignAtmosPipeLayers { } newMode)
             newMode.RefreshGrid(mouseScreen);
