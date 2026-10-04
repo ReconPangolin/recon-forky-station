@@ -53,7 +53,7 @@ internal sealed partial class ChatManager : IChatManager
     [Dependency] private MentorManager _mentorManager = default!; // RMC Mentor Chat Funky Port
     private SharedChatSystem _chatSystem = default!;
 
-private ISawmill? _sawmill = default!;
+    private ISawmill? _sawmill = default!;
 
     /// <summary>
     /// The maximum length a player-sent message can be sent
@@ -434,12 +434,8 @@ private ISawmill? _sawmill = default!;
         var netSource = _entityManager.GetNetEntity(source);
         user?.AddEntity(netSource);
 
-
-
-        //var customWrapMessage = PrependFollowButtonIfAppropriate(wrappedMessage, source, clients);
         var msg = new ChatMessage(channel, message, wrappedMessage, netSource, user?.Key, hideChat, colorOverride, audioPath, audioVolume, repeatCheckSender: !_entityManager.HasComponent<ChatRepeatIgnoreSenderComponent>(source)); // Persistence: Chat stacking from RMC14 - pull/7587
         _netManager.ServerSendToMany(new MsgChatMessage() { Message = msg }, clients);
-
 
         if (!recordReplay)
             return;
