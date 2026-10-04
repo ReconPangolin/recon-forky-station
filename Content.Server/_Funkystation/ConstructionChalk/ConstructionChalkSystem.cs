@@ -160,7 +160,7 @@ public sealed partial class ConstructionChalkSystem : SharedConstructionChalkSys
                 if (!_proto.TryIndex<ConstructionPrototype>(entry.ConstructionPrototype.Id, out var recipe))
                     continue;
 
-                if (_proto.TryGetVariantCollection<ConstructionPrototype>(recipe, out var variants) &&
+                if (_proto.TryGetVariantCollection<ConstructionPrototype>(constructionPrototype, out var variants) &&
                     variants.Contains(entry.ConstructionPrototype))
                     return true;
             }
