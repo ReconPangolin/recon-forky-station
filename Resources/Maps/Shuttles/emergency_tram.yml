@@ -5802,14 +5802,15 @@ entities:
       parent: 2
       rot: 1.5707963267948966 rad
       pos: 13.5,-19.5
-- proto: PaintingSleepingGypsy
-  entities:
-  - uid: 634
-    components:
-    - type: Transform
-      parent: 2
-      rot: -1.5707963267948966 rad
-      pos: 18.5,-12.5
+# funky - migration isnt enough here
+#- proto: PaintingSleepingGypsy
+#  entities:
+#  - uid: 634
+#    components:
+#    - type: Transform
+#      parent: 2
+#      rot: -1.5707963267948966 rad
+#      pos: 18.5,-12.5
 - proto: PaintingTheKiss
   entities:
   - uid: 1922

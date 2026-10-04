@@ -54,7 +54,7 @@
       values: [ _Funkystation/Structures/Piping/Atmospherics/pump.rsi, _Funkystation/Structures/Piping/Atmospherics/pump_alt1.rsi, _Funkystation/Structures/Piping/Atmospherics/pump_alt2.rsi ] #Funky
     layers:
     - sprite: !type:CreateVariants
-        values: [ _Funkystation/Structures/Piping/Atmospherics/pump.rsi, _Funkystation/Structures/Piping/Atmospherics/pipe_alt1.rsi, _Funkystation/Structures/Piping/Atmospherics/pipe_alt2.rsi ] #Funky
+        values: [ _Funkystation/Structures/Piping/Atmospherics/pipe.rsi, _Funkystation/Structures/Piping/Atmospherics/pipe_alt1.rsi, _Funkystation/Structures/Piping/Atmospherics/pipe_alt2.rsi ] #Funky
       state: pipeStraight
       map: [ "enum.PipeVisualLayers.Pipe" ]
     - state: pumpPressure

@@ -145,6 +145,11 @@ public sealed class DefibrillatorTest : InteractionTest
         var mobThresholdsSystem = SEntMan.System<MobThresholdSystem>();
         var buckleSystem = SEntMan.System<SharedBuckleSystem>();
         var loc = Server.ResolveDependency<ILocalizationManager>();
+        var mobStateSystem = SEntMan.System<MobStateSystem>(); // funky
+        var solutionContainerSystem = SEntMan.System<SharedSolutionContainerSystem>(); // funky - we will need to put epinepherine in the target bloodstream to defib
+
+        // funky - set revive chance cvar to 100
+        await Server.WaitPost(() => Server.CfgMan.SetCVar(DefibrillatorCVars.ReviveChance, 1f));
 
         // Don't let the player and target suffocate.
         await AddAtmosphere();
@@ -155,6 +160,7 @@ public sealed class DefibrillatorTest : InteractionTest
         var targetMobState = Comp<MobStateComponent>();
         var targetDamageable = Comp<DamageableComponent>();
         var targetBuckle = Comp<BuckleComponent>();
+        var targetBloodstream = Comp<BloodstreamComponent>(); // funky
 
         await Server.WaitPost(() => buckleSystem.TryBuckle(STarget.Value, null, bed));
         await RunTicks(3);
@@ -179,10 +185,21 @@ public sealed class DefibrillatorTest : InteractionTest
         var cooldown = Comp<DefibrillatorComponent>(defib).ZapDelay;
         await RunSeconds((float)cooldown.TotalSeconds);
 
+        // funky - add epi to the bloodstream
+        await Server.WaitPost(() =>
+        {
+            var bloodSolution = targetBloodstream.BloodSolution;
+            if (solutionContainerSystem.ResolveSolution(STarget.Value, targetBloodstream.BloodSolutionName, ref bloodSolution))
+            {
+                solutionContainerSystem.TryAddReagent(bloodSolution.Value, EpinephrineReagentId, 10, out _);
+            }
+        });
+
         // ZAP!
         await Interact();
 
-        Assert.That(targetMobState.CurrentState, Is.EqualTo(MobState.Critical), "Buckled target mob was not revived from being defibrillated.");
+        // funky - use mobStateSystem to check if critical, since crit is split into softcrit and hardcrit
+        Assert.That(mobStateSystem.IsCritical(STarget.Value, targetMobState), Is.True, "Buckled target mob was not revived from being defibrillated.");
 
         // The dummy has no mind, so the defib complains about that. It must not also complain about the bed.
         var spoken = GetEvents<EntitySpokeEvent>(sDefib).Select(ev => ev.Message).ToList();
