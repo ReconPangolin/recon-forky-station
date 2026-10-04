@@ -166,10 +166,6 @@
   graph: !type:CreateVariants
     values: [ GasUnary, GasUnaryAlt1, GasUnaryAlt2 ]
   targetNode: ventpump
-  alternativePrototypes: # Funky
-  - GasVentPump
-  - GasVentPumpAlt1
-  - GasVentPumpAlt2
 
 - type: construction
   parent: BaseGasUnary
@@ -180,10 +176,6 @@
   graph: !type:CreateVariants
     values: [ GasUnary, GasUnaryAlt1, GasUnaryAlt2 ]
   targetNode: passivevent
-  alternativePrototypes: # Funky
-  - GasPassiveVent
-  - GasPassiveVentAlt1
-  - GasPassiveVentAlt2
 
 - type: construction
   parent: BaseGasUnary
@@ -194,10 +186,6 @@
   graph: !type:CreateVariants
     values: [ GasUnary, GasUnaryAlt1, GasUnaryAlt2 ]
   targetNode: ventscrubber
-  alternativePrototypes: # Funky
-  - GasVentScrubber
-  - GasVentScrubberAlt1
-  - GasVentScrubberAlt2
 
 - type: construction
   parent: BaseGasUnary
@@ -208,10 +196,6 @@
   graph: !type:CreateVariants
     values: [ GasUnary, GasUnaryAlt1, GasUnaryAlt2 ]
   targetNode: outletinjector
-  alternativePrototypes: # Funky
-  - GasOutletInjector
-  - GasOutletInjectorAlt1
-  - GasOutletInjectorAlt2
 
 # endregion Unary
 
@@ -275,26 +259,6 @@
   graph: !type:CreateVariants
     values: [ GasBinary, GasBinaryAlt1, GasBinaryAlt2 ]
   targetNode: signalvalve
-  alternativePrototypes:
-  - SignalControlledValve
-  - SignalControlledValveAlt1
-  - SignalControlledValveAlt2
-  conditions:
-  - !type:NoUnstackableInTile
-
-- type: construction
-  parent: SignalControlledValve
-  id: SignalControlledValveAlt1
-  hide: true
-  targetNode: signalvalveAlt1
-  conditions:
-  - !type:NoUnstackableInTile
-
-- type: construction
-  parent: SignalControlledValve
-  id: SignalControlledValveAlt2
-  hide: true
-  targetNode: signalvalveAlt2
   conditions:
   - !type:NoUnstackableInTile
 
