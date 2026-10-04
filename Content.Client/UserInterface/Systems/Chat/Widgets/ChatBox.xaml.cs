@@ -89,6 +89,7 @@ public partial class ChatBox : UIWidget, IEntityLinkClickHandler
     public void Repopulate()
     {
         Contents.Clear();
+        RepeatQueue.Clear(); // funky - make sure to clear the chat stacking repeat queue as well
 
         foreach (var message in _controller.History)
         {
