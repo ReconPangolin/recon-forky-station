@@ -10,5 +10,8 @@ namespace Content.Shared._Funkystation.Botany.Components;
 public sealed partial class FuPlantMutationComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public List<ProtoId<FuPlantMutationPrototype>> Mutations = [];
+    public List<EntProtoId> StartingMutations = [];
+
+    [AutoNetworkedField]
+    public List<EntityUid > Mutations = [];
 }

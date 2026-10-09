@@ -15,30 +15,43 @@ public sealed partial class FuPlantMutationSystem : EntitySystem
     [Dependency] private SharedEntityEffectsSystem _entityEffects = default!;
 
     [SubscribeLocalEvent]
+    private void OnInit(Entity<FuPlantMutationComponent> ent, ref ComponentStartup args)
+    {
+        foreach (var mutationId in ent.Comp.StartingMutations)
+        {
+            _prototypeManager.Index(mutationId);
+
+            var mutation = Spawn(mutationId);
+
+            if (!TryComp<FuPlantEffectComponent>(mutation, out var comp))
+            {
+                Del(mutation);
+                continue;
+            }
+
+            ent.Comp.Mutations.Add(mutation);
+        }
+    }
+
+    [SubscribeLocalEvent]
     private void OnAfterDoHarvest(Entity<FuPlantMutationComponent> ent, ref AfterDoHarvestEvent args)
     {
         //TODO: Optimise
         foreach (var mutationId in ent.Comp.Mutations)
         {
-            var plantMutation = _prototypeManager.Index(mutationId);
 
-            foreach (var effects in plantMutation.PlantEffects)
+            if (!TryComp<FuPlantEffectComponent>(mutationId, out var comp))
+                continue;
+
+
+            foreach (var effect in comp.OnHarvestEffects)
             {
-                if (effects.AppliesToHarvester)
-                {
-                    foreach (var effect in effects.Effects)
-                    {
-                        _entityEffects.TryApplyEffect(args.User, effect);
-                    }
-                }
+                _entityEffects.TryApplyEffect(ent, effect);
+            }
 
-                if (effects.AppliesWhenHarvested)
-                {
-                    foreach (var effect in effects.Effects)
-                    {
-                        _entityEffects.TryApplyEffect(args.Target, effect);
-                    }
-                }
+            foreach (var effect in comp.HarvesterEffects)
+            {
+                _entityEffects.TryApplyEffect(args.User, effect);
             }
         }
     }

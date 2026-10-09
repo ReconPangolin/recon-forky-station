@@ -1,17 +1,21 @@
-﻿- type: fuPlantMutation
+﻿- type: entity
   id: PlantHot
-  plantEffects:
-  - effects:
+  name: plant hot mutation
+  description: Unknown
+  components:
+  - type: FuPlantEffect
+    harvesterEffects:
     - !type:Flammable
       multiplier: 3.75
       multiplierOnExisting: 0.75
     - !type:Ignite
-    appliesToHarvester: true
 
-- type: fuPlantMutation
-  id: PlantShocking
-  plantEffects:
-  - effects:
-    - !type:Electrocute
-      siemensCoefficient: 0.5
-    appliesToHarvester: true
+#- type: entity
+#  id: PlantShocking
+#  name: plant shocking mutation
+#  description: Unknown
+#  components:
+#  - type: FuPlantEffect
+#    harvesterEffects:
+#    - !type:Electrocute
+#      siemensCoefficient: 0.5
