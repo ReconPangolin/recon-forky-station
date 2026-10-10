@@ -15,9 +15,9 @@ public sealed partial class EmoteEntityEffectSystem : EntityEffectSystem<MetaDat
     protected override void Effect(Entity<MetaDataComponent> entity, ref EntityEffectEvent<Emote> args)
     {
         if (args.Effect.ShowInChat)
-            _chat.TryEmoteWithChat(entity, args.Effect.EmoteId, ChatTransmitRange.GhostRangeLimit, forceEmote: args.Effect.Force);
+            _chat.TryEmoteWithChat(entity, args.Effect.EmoteId, ChatTransmitRange.GhostRangeLimit, forceEmote: args.Effect.Force, ignoreActionBlocker:args.Effect.IgnoreActionBlocker); // Funky - Added IgnoreActionBlocker
         else
-            _chat.TryEmoteWithChat(entity, args.Effect.EmoteId, ChatTransmitRange.HideChat, forceEmote: args.Effect.Force);
+            _chat.TryEmoteWithChat(entity, args.Effect.EmoteId, ChatTransmitRange.HideChat, forceEmote: args.Effect.Force, ignoreActionBlocker:args.Effect.IgnoreActionBlocker); // Funky - Added IgnoreActionBlocker
     }
 }
 
@@ -47,6 +47,14 @@ public sealed partial class Emote : EntityEffectBase<Emote>
     /// </summary>
     [DataField]
     public bool Force;
+
+    //Funky start
+    /// <summary>
+    ///     If true, the entity will perform the emote even if they are blocked from performing emote actions.
+    /// </summary>
+    [DataField]
+    public bool IgnoreActionBlocker = false;
+    //Funky end
 
     public override string? EntityEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
     {

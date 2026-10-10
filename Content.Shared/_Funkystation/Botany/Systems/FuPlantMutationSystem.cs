@@ -19,6 +19,7 @@ public sealed partial class FuPlantMutationSystem : EntitySystem
     {
         foreach (var mutationId in ent.Comp.StartingMutations)
         {
+            //TODO: Add proper method
             _prototypeManager.Index(mutationId);
 
             var mutation = Spawn(mutationId);
@@ -44,14 +45,18 @@ public sealed partial class FuPlantMutationSystem : EntitySystem
                 continue;
 
 
-            foreach (var effect in comp.OnHarvestEffects)
+            foreach (var effect in comp.Effects)
             {
-                _entityEffects.TryApplyEffect(ent, effect);
-            }
 
-            foreach (var effect in comp.HarvesterEffects)
-            {
-                _entityEffects.TryApplyEffect(args.User, effect);
+                if ((PlantEffectType) effect.Item1 == PlantEffectType.Harvester)
+                {
+                    _entityEffects.TryApplyEffect(args.User, effect.Item2);
+                }
+                else if ((PlantEffectType) effect.Item1 == PlantEffectType.OnHarvest)
+                {
+                    _entityEffects.TryApplyEffect(ent, effect.Item2);
+                }
+
             }
         }
     }

@@ -1,21 +1,32 @@
 ﻿- type: entity
   id: PlantHot
   name: plant hot mutation
-  description: Unknown
+  description: plant is hot
+  categories: [ HideSpawnMenu ]
   components:
   - type: FuPlantEffect
-    harvesterEffects:
-    - !type:Flammable
-      multiplier: 3.75
-      multiplierOnExisting: 0.75
-    - !type:Ignite
+    effects:
+    - enum.PlantEffectType.Harvester:
+        !type:Flammable
+        multiplier: 3.75
+        multiplierOnExisting: 0.75
+    - enum.PlantEffectType.Harvester:
+        !type:Ignite
 
-#- type: entity
-#  id: PlantShocking
-#  name: plant shocking mutation
-#  description: Unknown
-#  components:
-#  - type: FuPlantEffect
-#    harvesterEffects:
-#    - !type:Electrocute
-#      siemensCoefficient: 0.5
+- type: entity
+  id: PlantShocking
+  name: plant electric mutation
+  description: plant electrocutes you
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: FuPlantEffect
+    effects:
+    - enum.PlantEffectType.Harvester:
+        !type:Electrocute
+        siemensCoefficient: 0.5
+    - enum.PlantEffectType.OnHarvest:
+        !type:Emote
+        emote: Scream
+        force: True
+        showInChat: True
+        ignoreActionBlocker: True

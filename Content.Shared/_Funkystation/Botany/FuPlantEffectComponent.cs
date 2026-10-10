@@ -1,5 +1,6 @@
 ﻿using Content.Shared.EntityEffects;
 using Robust.Shared.GameStates;
+using Robust.Shared.Serialization;
 
 namespace Content.Shared._Funkystation.Botany;
 
@@ -14,23 +15,15 @@ public sealed partial class FuPlantEffectComponent : Component
     /// List of RandomFills that can be picked from.
     /// </summary>
     [DataField]
-    public List<EntityEffect> ProduceEffects = [];
+    public List<(Enum, EntityEffect)> Effects = [];
 
-    /// <summary>
-    /// List of RandomFills that can be picked from.
-    /// </summary>
-    [DataField]
-    public List<EntityEffect> PlantEffects = [];
+}
 
-    /// <summary>
-    /// List of RandomFills that can be picked from.
-    /// </summary>
-    [DataField]
-    public List<EntityEffect> HarvesterEffects = [];
-
-    /// <summary>
-    /// List of RandomFills that can be picked from.
-    /// </summary>
-    [DataField]
-    public List<EntityEffect> OnHarvestEffects = [];
+[Serializable, NetSerializable]
+public enum PlantEffectType
+{
+    Produce,
+    Harvester,
+    OnHarvest,
+    Plant,
 }

@@ -927,6 +927,9 @@
         min: 1
         max: 4
         potencyDivisor: 25
+  - type: FuPlantMutation #Funky
+    startingMutations:
+    - PlantShocking
 
 - type: entity
   parent: BasePlant

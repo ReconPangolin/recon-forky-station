@@ -1,1 +1,8 @@
-﻿
+﻿- type: entityTable
+  id: PlantInstabilityTestTable
+  table: !type:GroupSelector
+    children:
+    - id: PlantHot
+      weight: 1
+    - id: PlantShocking
+      weight: 1
